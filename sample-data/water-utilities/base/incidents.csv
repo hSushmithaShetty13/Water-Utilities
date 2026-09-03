@@ -1,0 +1,61 @@
+incident_id,asset_id,customer_id,incident_type,severity,status,opened_at,resolved_at,estimated_leakage_m3,service_interruption_hours,repeat_incident_flag
+INC0001,AST0008,CUS0004,Burst Main,Critical,Investigating,2026-01-06 08:30:00,,11.25,0,false
+INC0002,AST0015,CUS0007,Pressure Loss,High,Resolved,2026-01-09 09:30:00,2026-01-10 05:30:00,14.0,0,false
+INC0003,AST0022,CUS0010,Service Interruption,Medium,Closed,2026-01-12 10:30:00,2026-01-13 07:30:00,16.75,1.4,false
+INC0004,AST0029,,Leakage,Low,Open,2026-01-15 11:30:00,,19.5,0,false
+INC0005,AST0006,CUS0016,Burst Main,Critical,Investigating,2026-01-18 12:30:00,,22.25,0,false
+INC0006,AST0013,CUS0019,Pressure Loss,High,Resolved,2026-01-21 13:30:00,2026-01-22 13:30:00,25.0,1.55,false
+INC0007,AST0020,CUS0022,Service Interruption,Medium,Closed,2026-01-24 14:30:00,2026-01-25 15:30:00,27.75,0,false
+INC0008,AST0029,,Leakage,Low,Open,2026-01-27 15:30:00,,30.5,0,true
+INC0009,AST0004,CUS0028,Burst Main,Critical,Investigating,2026-01-30 07:30:00,,33.25,1.7,false
+INC0010,AST0011,CUS0031,Pressure Loss,High,Resolved,2026-02-02 08:30:00,2026-02-03 12:30:00,36.0,0,false
+INC0011,AST0018,CUS0034,Service Interruption,Medium,Closed,2026-02-05 09:30:00,2026-02-06 14:30:00,38.75,0,false
+INC0012,AST0025,,Leakage,Low,Open,2026-02-08 10:30:00,,41.5,1.85,false
+INC0013,AST0002,CUS0040,Burst Main,Critical,Investigating,2026-02-11 11:30:00,,44.25,0,false
+INC0014,AST0009,CUS0003,Pressure Loss,High,Resolved,2026-02-14 12:30:00,2026-02-15 20:30:00,47.0,0,false
+INC0015,AST0016,CUS0006,Service Interruption,Medium,Closed,2026-02-17 13:30:00,2026-02-18 22:30:00,49.75,2.0,false
+INC0016,AST0025,,Leakage,Low,Open,2026-02-20 14:30:00,,52.5,0,true
+INC0017,AST0030,CUS0012,Burst Main,Critical,Investigating,2026-02-23 15:30:00,,55.25,0,false
+INC0018,AST0007,CUS0015,Pressure Loss,High,Resolved,2026-02-26 07:30:00,2026-02-27 19:30:00,58.0,2.15,false
+INC0019,AST0014,CUS0018,Service Interruption,Medium,Closed,2026-03-01 08:30:00,2026-03-02 21:30:00,60.75,0,false
+INC0020,AST0021,,Leakage,Low,Open,2026-03-04 09:30:00,,63.5,0,false
+INC0021,AST0028,CUS0024,Burst Main,Critical,Investigating,2026-03-07 10:30:00,,66.25,2.3,false
+INC0022,AST0005,CUS0027,Pressure Loss,High,Resolved,2026-03-10 11:30:00,2026-03-12 03:30:00,69.0,0,false
+INC0023,AST0012,CUS0030,Service Interruption,Medium,Closed,2026-03-13 12:30:00,2026-03-15 05:30:00,71.75,0,false
+INC0024,AST0021,,Leakage,Low,Open,2026-03-16 13:30:00,,74.5,2.45,true
+INC0025,AST0026,CUS0036,Burst Main,Critical,Investigating,2026-03-19 14:30:00,,77.25,0,false
+INC0026,AST0003,CUS0039,Pressure Loss,High,Resolved,2026-03-22 15:30:00,2026-03-24 11:30:00,80.0,0,false
+INC0027,AST0010,CUS0002,Service Interruption,Medium,Closed,2026-03-25 07:30:00,2026-03-27 04:30:00,82.75,2.6,false
+INC0028,AST0017,,Leakage,Low,Open,2026-03-28 08:30:00,,85.5,0,false
+INC0029,AST0024,CUS0008,Burst Main,Critical,Investigating,2026-03-31 09:30:00,,88.25,0,false
+INC0030,AST0001,CUS0011,Pressure Loss,High,Resolved,2026-04-03 10:30:00,2026-04-05 10:30:00,91.0,2.75,false
+INC0031,AST0008,CUS0014,Service Interruption,Medium,Closed,2026-04-06 11:30:00,2026-04-08 12:30:00,93.75,0,false
+INC0032,AST0017,,Leakage,Low,Open,2026-04-09 12:30:00,,96.5,0,true
+INC0033,AST0022,CUS0020,Burst Main,Critical,Investigating,2026-04-12 13:30:00,,99.25,2.9,false
+INC0034,AST0029,CUS0023,Pressure Loss,High,Resolved,2026-04-15 14:30:00,2026-04-17 18:30:00,102.0,0,false
+INC0035,AST0006,CUS0026,Service Interruption,Medium,Closed,2026-04-18 15:30:00,2026-04-20 20:30:00,104.75,0,false
+INC0036,AST0013,,Leakage,Low,Open,2026-04-21 07:30:00,,107.5,3.05,false
+INC0037,AST0020,CUS0032,Burst Main,Critical,Investigating,2026-04-24 08:30:00,,110.25,0,false
+INC0038,AST0027,CUS0035,Pressure Loss,High,Resolved,2026-04-27 09:30:00,2026-04-29 17:30:00,113.0,0,false
+INC0039,AST0004,CUS0038,Service Interruption,Medium,Closed,2026-04-30 10:30:00,2026-05-02 19:30:00,115.75,3.2,false
+INC0040,AST0013,,Leakage,Low,Open,2026-05-03 11:30:00,,118.5,0,true
+INC0041,AST0018,CUS0004,Burst Main,Critical,Investigating,2026-05-06 12:30:00,,121.25,0,false
+INC0042,AST0025,CUS0007,Pressure Loss,High,Resolved,2026-05-09 13:30:00,2026-05-12 01:30:00,124.0,3.35,false
+INC0043,AST0002,CUS0010,Service Interruption,Medium,Closed,2026-05-12 14:30:00,2026-05-15 03:30:00,126.75,0,false
+INC0044,AST0009,,Leakage,Low,Open,2026-05-15 15:30:00,,129.5,0,false
+INC0045,AST0016,CUS0016,Burst Main,Critical,Investigating,2026-05-18 07:30:00,,132.25,3.5,false
+INC0046,AST0023,CUS0019,Pressure Loss,High,Resolved,2026-05-21 08:30:00,2026-05-24 00:30:00,135.0,0,false
+INC0047,AST0030,CUS0022,Service Interruption,Medium,Closed,2026-05-24 09:30:00,2026-05-27 02:30:00,137.75,0,false
+INC0048,AST0009,,Leakage,Low,Open,2026-05-27 10:30:00,,140.5,3.65,true
+INC0049,AST0014,CUS0028,Burst Main,Critical,Investigating,2026-05-30 11:30:00,,143.25,0,false
+INC0050,AST0021,CUS0031,Pressure Loss,High,Resolved,2026-06-02 12:30:00,2026-06-05 08:30:00,146.0,0,false
+INC0051,AST0028,CUS0034,Service Interruption,Medium,Closed,2026-06-05 13:30:00,2026-06-08 10:30:00,148.75,3.8,false
+INC0052,AST0005,,Leakage,Low,Open,2026-06-08 14:30:00,,151.5,0,false
+INC0053,AST0012,CUS0040,Burst Main,Critical,Investigating,2026-06-11 15:30:00,,154.25,0,false
+INC0054,AST0019,CUS0003,Pressure Loss,High,Resolved,2026-06-14 07:30:00,2026-06-17 07:30:00,157.0,3.95,false
+INC0055,AST0026,CUS0006,Service Interruption,Medium,Closed,2026-06-17 08:30:00,2026-06-20 09:30:00,159.75,0,false
+INC0056,AST0005,,Leakage,Low,Open,2026-06-20 09:30:00,,162.5,0,true
+INC0057,AST0010,CUS0012,Burst Main,Critical,Investigating,2026-06-23 10:30:00,,165.25,4.1,false
+INC0058,AST0017,CUS0015,Pressure Loss,High,Resolved,2026-06-26 11:30:00,2026-06-29 15:30:00,168.0,0,false
+INC0059,AST0024,CUS0018,Service Interruption,Medium,Closed,2026-06-29 12:30:00,2026-07-02 17:30:00,170.75,0,false
+INC0060,AST0001,,Leakage,Low,Open,2026-07-02 13:30:00,,173.5,4.25,false

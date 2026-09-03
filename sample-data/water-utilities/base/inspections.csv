@@ -1,0 +1,91 @@
+inspection_id,asset_id,inspection_type,inspected_at,result,condition_score,follow_up_required
+INSP0001,AST0012,Leak Detection,2025-09-05 10:00:00,Passed,4,false
+INSP0002,AST0023,Mechanical,2025-09-09 11:00:00,Advisory,2,false
+INSP0003,AST0004,Water Quality Support,2025-09-13 12:00:00,Failed,5,false
+INSP0004,AST0015,Routine Condition,2025-09-17 13:00:00,Passed,3,true
+INSP0005,AST0026,Leak Detection,2025-09-21 14:00:00,Passed,1,false
+INSP0006,AST0007,Mechanical,2025-09-25 09:00:00,Advisory,4,false
+INSP0007,AST0018,Water Quality Support,2025-09-29 10:00:00,Failed,2,true
+INSP0008,AST0029,Routine Condition,2025-10-03 11:00:00,Passed,5,true
+INSP0009,AST0010,Leak Detection,2025-10-07 12:00:00,Passed,3,false
+INSP0010,AST0021,Mechanical,2025-10-11 13:00:00,Advisory,1,false
+INSP0011,AST0002,Water Quality Support,2025-10-15 14:00:00,Failed,4,false
+INSP0012,AST0013,Routine Condition,2025-10-19 09:00:00,Passed,2,true
+INSP0013,AST0024,Leak Detection,2025-10-23 10:00:00,Passed,5,false
+INSP0014,AST0005,Mechanical,2025-10-27 11:00:00,Advisory,3,true
+INSP0015,AST0016,Water Quality Support,2025-10-31 12:00:00,Failed,1,false
+INSP0016,AST0027,Routine Condition,2025-11-04 13:00:00,Passed,4,true
+INSP0017,AST0008,Leak Detection,2025-11-08 14:00:00,Passed,2,false
+INSP0018,AST0019,Mechanical,2025-11-12 09:00:00,Advisory,5,false
+INSP0019,AST0030,Water Quality Support,2025-11-16 10:00:00,Failed,3,false
+INSP0020,AST0011,Routine Condition,2025-11-20 11:00:00,Passed,1,true
+INSP0021,AST0022,Leak Detection,2025-11-24 12:00:00,Passed,4,true
+INSP0022,AST0003,Mechanical,2025-11-28 13:00:00,Advisory,2,false
+INSP0023,AST0014,Water Quality Support,2025-12-02 14:00:00,Failed,5,false
+INSP0024,AST0025,Routine Condition,2025-12-06 09:00:00,Passed,3,true
+INSP0025,AST0006,Leak Detection,2025-12-10 10:00:00,Passed,1,false
+INSP0026,AST0017,Mechanical,2025-12-14 11:00:00,Advisory,4,false
+INSP0027,AST0028,Water Quality Support,2025-12-18 12:00:00,Failed,2,false
+INSP0028,AST0009,Routine Condition,2025-12-22 13:00:00,Passed,5,true
+INSP0029,AST0020,Leak Detection,2025-12-26 14:00:00,Passed,3,false
+INSP0030,AST0001,Mechanical,2025-12-30 09:00:00,Advisory,1,false
+INSP0031,AST0012,Water Quality Support,2026-01-03 10:00:00,Failed,4,false
+INSP0032,AST0023,Routine Condition,2026-01-07 11:00:00,Passed,2,true
+INSP0033,AST0004,Leak Detection,2026-01-11 12:00:00,Passed,5,false
+INSP0034,AST0015,Mechanical,2026-01-15 13:00:00,Advisory,3,false
+INSP0035,AST0026,Water Quality Support,2026-01-19 14:00:00,Failed,1,true
+INSP0036,AST0007,Routine Condition,2026-01-23 09:00:00,Passed,4,true
+INSP0037,AST0018,Leak Detection,2026-01-27 10:00:00,Passed,2,false
+INSP0038,AST0029,Mechanical,2026-01-31 11:00:00,Advisory,5,false
+INSP0039,AST0010,Water Quality Support,2026-02-04 12:00:00,Failed,3,false
+INSP0040,AST0021,Routine Condition,2026-02-08 13:00:00,Passed,1,true
+INSP0041,AST0002,Leak Detection,2026-02-12 14:00:00,Passed,4,false
+INSP0042,AST0013,Mechanical,2026-02-16 09:00:00,Advisory,2,true
+INSP0043,AST0024,Water Quality Support,2026-02-20 10:00:00,Failed,5,false
+INSP0044,AST0005,Routine Condition,2026-02-24 11:00:00,Passed,3,true
+INSP0045,AST0016,Leak Detection,2026-02-28 12:00:00,Passed,1,false
+INSP0046,AST0027,Mechanical,2026-03-04 13:00:00,Advisory,4,false
+INSP0047,AST0008,Water Quality Support,2026-03-08 14:00:00,Failed,2,false
+INSP0048,AST0019,Routine Condition,2026-03-12 09:00:00,Passed,5,true
+INSP0049,AST0030,Leak Detection,2026-03-16 10:00:00,Passed,3,true
+INSP0050,AST0011,Mechanical,2026-03-20 11:00:00,Advisory,1,false
+INSP0051,AST0022,Water Quality Support,2026-03-24 12:00:00,Failed,4,false
+INSP0052,AST0003,Routine Condition,2026-03-28 13:00:00,Passed,2,true
+INSP0053,AST0014,Leak Detection,2026-04-01 14:00:00,Passed,5,false
+INSP0054,AST0025,Mechanical,2026-04-05 09:00:00,Advisory,3,false
+INSP0055,AST0006,Water Quality Support,2026-04-09 10:00:00,Failed,1,false
+INSP0056,AST0017,Routine Condition,2026-04-13 11:00:00,Passed,4,true
+INSP0057,AST0028,Leak Detection,2026-04-17 12:00:00,Passed,2,false
+INSP0058,AST0009,Mechanical,2026-04-21 13:00:00,Advisory,5,false
+INSP0059,AST0020,Water Quality Support,2026-04-25 14:00:00,Failed,3,false
+INSP0060,AST0001,Routine Condition,2026-04-29 09:00:00,Passed,1,true
+INSP0061,AST0012,Leak Detection,2026-05-03 10:00:00,Passed,4,false
+INSP0062,AST0023,Mechanical,2026-05-07 11:00:00,Advisory,2,false
+INSP0063,AST0004,Water Quality Support,2026-05-11 12:00:00,Failed,5,true
+INSP0064,AST0015,Routine Condition,2026-05-15 13:00:00,Passed,3,true
+INSP0065,AST0026,Leak Detection,2026-05-19 14:00:00,Passed,1,false
+INSP0066,AST0007,Mechanical,2026-05-23 09:00:00,Advisory,4,false
+INSP0067,AST0018,Water Quality Support,2026-05-27 10:00:00,Failed,2,false
+INSP0068,AST0029,Routine Condition,2026-05-31 11:00:00,Passed,5,true
+INSP0069,AST0010,Leak Detection,2026-06-04 12:00:00,Passed,3,false
+INSP0070,AST0021,Mechanical,2026-06-08 13:00:00,Advisory,1,true
+INSP0071,AST0002,Water Quality Support,2026-06-12 14:00:00,Failed,4,false
+INSP0072,AST0013,Routine Condition,2026-06-16 09:00:00,Passed,2,true
+INSP0073,AST0024,Leak Detection,2026-06-20 10:00:00,Passed,5,false
+INSP0074,AST0005,Mechanical,2026-06-24 11:00:00,Advisory,3,false
+INSP0075,AST0016,Water Quality Support,2026-06-28 12:00:00,Failed,1,false
+INSP0076,AST0027,Routine Condition,2026-07-02 13:00:00,Passed,4,true
+INSP0077,AST0008,Leak Detection,2026-07-06 14:00:00,Passed,2,true
+INSP0078,AST0019,Mechanical,2026-07-10 09:00:00,Advisory,5,false
+INSP0079,AST0030,Water Quality Support,2026-07-14 10:00:00,Failed,3,false
+INSP0080,AST0011,Routine Condition,2026-07-18 11:00:00,Passed,1,true
+INSP0081,AST0022,Leak Detection,2026-07-22 12:00:00,Passed,4,false
+INSP0082,AST0003,Mechanical,2026-07-26 13:00:00,Advisory,2,false
+INSP0083,AST0014,Water Quality Support,2026-07-30 14:00:00,Failed,5,false
+INSP0084,AST0025,Routine Condition,2026-08-03 09:00:00,Passed,3,true
+INSP0085,AST0006,Leak Detection,2026-08-07 10:00:00,Passed,1,false
+INSP0086,AST0017,Mechanical,2026-08-11 11:00:00,Advisory,4,false
+INSP0087,AST0028,Water Quality Support,2026-08-15 12:00:00,Failed,2,false
+INSP0088,AST0009,Routine Condition,2026-08-19 13:00:00,Passed,5,true
+INSP0089,AST0020,Leak Detection,2026-08-23 14:00:00,Passed,3,false
+INSP0090,AST0001,Mechanical,2026-08-27 09:00:00,Advisory,1,false

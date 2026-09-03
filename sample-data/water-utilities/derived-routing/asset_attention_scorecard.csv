@@ -1,0 +1,31 @@
+asset_id,asset_type,region,asset_status,active_high_severity_incidents,latest_inspection_at,latest_inspection_result,requires_attention,attention_band
+AST0001,Water Main,Midlands,Active,0,2026-08-27 09:00:00,Advisory,false,Routine Monitoring
+AST0002,Pumping Station,South West,Active,1,2026-06-12 14:00:00,Failed,true,Immediate Review
+AST0003,Service Reservoir,South East,Active,0,2026-07-26 13:00:00,Advisory,false,Routine Monitoring
+AST0004,Valve,North West,Active,1,2026-05-11 12:00:00,Failed,true,Immediate Review
+AST0005,Metering Point,North East,Active,0,2026-06-24 11:00:00,Advisory,false,Routine Monitoring
+AST0006,Water Main,Midlands,Active,1,2026-08-07 10:00:00,Passed,true,Immediate Review
+AST0007,Pumping Station,South West,Active,0,2026-05-23 09:00:00,Advisory,false,Routine Monitoring
+AST0008,Service Reservoir,South East,Active,1,2026-07-06 14:00:00,Passed,true,Immediate Review
+AST0009,Valve,North West,Active,0,2026-08-19 13:00:00,Passed,false,Routine Monitoring
+AST0010,Metering Point,North East,Active,1,2026-06-04 12:00:00,Passed,true,Immediate Review
+AST0011,Water Main,Midlands,Active,0,2026-07-18 11:00:00,Passed,false,Routine Monitoring
+AST0012,Pumping Station,South West,Active,1,2026-05-03 10:00:00,Passed,true,Immediate Review
+AST0013,Service Reservoir,South East,Active,0,2026-06-16 09:00:00,Passed,false,Routine Monitoring
+AST0014,Valve,North West,Inactive,1,2026-07-30 14:00:00,Failed,false,Routine Monitoring
+AST0015,Metering Point,North East,Active,0,2026-05-15 13:00:00,Passed,false,Routine Monitoring
+AST0016,Water Main,Midlands,Active,1,2026-06-28 12:00:00,Failed,true,Immediate Review
+AST0017,Pumping Station,South West,Active,0,2026-08-11 11:00:00,Advisory,false,Routine Monitoring
+AST0018,Service Reservoir,South East,Active,1,2026-05-27 10:00:00,Failed,true,Immediate Review
+AST0019,Valve,North West,Active,0,2026-07-10 09:00:00,Advisory,false,Routine Monitoring
+AST0020,Metering Point,North East,Active,1,2026-08-23 14:00:00,Passed,true,Immediate Review
+AST0021,Water Main,Midlands,Active,0,2026-06-08 13:00:00,Advisory,false,Routine Monitoring
+AST0022,Pumping Station,South West,Active,1,2026-07-22 12:00:00,Passed,true,Immediate Review
+AST0023,Service Reservoir,South East,Active,0,2026-05-07 11:00:00,Advisory,false,Routine Monitoring
+AST0024,Valve,North West,Active,1,2026-06-20 10:00:00,Passed,true,Immediate Review
+AST0025,Metering Point,North East,Active,0,2026-08-03 09:00:00,Passed,false,Routine Monitoring
+AST0026,Water Main,Midlands,Active,1,2026-05-19 14:00:00,Passed,true,Immediate Review
+AST0027,Pumping Station,South West,Active,0,2026-07-02 13:00:00,Passed,false,Routine Monitoring
+AST0028,Service Reservoir,South East,Active,1,2026-08-15 12:00:00,Failed,true,Immediate Review
+AST0029,Valve,North West,Inactive,0,2026-05-31 11:00:00,Passed,false,Routine Monitoring
+AST0030,Metering Point,North East,Active,1,2026-07-14 10:00:00,Failed,true,Immediate Review

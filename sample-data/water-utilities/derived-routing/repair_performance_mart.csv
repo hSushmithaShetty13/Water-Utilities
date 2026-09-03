@@ -1,0 +1,56 @@
+work_order_id,incident_id,asset_id,incident_severity,work_order_status,repair_duration_hours,completed_on_time,performance_band
+WO0001,INC0006,AST0013,High,In Progress,,false,Open Priority Repair
+WO0002,INC0011,AST0018,Medium,Completed,22.0,true,Completed On Time
+WO0003,INC0016,AST0025,Low,Completed,29.0,false,Completed Late
+WO0004,INC0021,AST0028,Critical,Planned,,false,Open Priority Repair
+WO0005,INC0026,AST0003,High,In Progress,,false,Open Priority Repair
+WO0006,INC0031,AST0008,Medium,Completed,50.0,false,Completed Late
+WO0007,INC0036,AST0013,Low,Completed,57.0,false,Completed Late
+WO0008,INC0041,AST0018,Critical,Planned,,false,Open Priority Repair
+WO0009,INC0046,AST0023,High,In Progress,,false,Open Priority Repair
+WO0010,INC0051,AST0028,Medium,Completed,18.0,true,Completed On Time
+WO0011,INC0056,AST0005,Low,Completed,25.0,true,Completed On Time
+WO0012,INC0001,AST0008,Critical,Planned,,false,Open Priority Repair
+WO0013,INC0006,AST0013,High,In Progress,,false,Open Priority Repair
+WO0014,INC0011,AST0018,Medium,Completed,46.0,false,Completed Late
+WO0015,INC0016,AST0025,Low,Completed,53.0,false,Completed Late
+WO0016,INC0021,AST0028,Critical,Planned,,false,Open Priority Repair
+WO0017,INC0026,AST0003,High,In Progress,,false,Open Priority Repair
+WO0018,INC0031,AST0008,Medium,Completed,14.0,true,Completed On Time
+WO0019,INC0036,AST0013,Low,Completed,21.0,true,Completed On Time
+WO0020,INC0041,AST0018,Critical,Planned,,false,Open Priority Repair
+WO0021,INC0046,AST0023,High,In Progress,,false,Open Priority Repair
+WO0022,INC0051,AST0028,Medium,Completed,42.0,false,Completed Late
+WO0023,INC0056,AST0005,Low,Completed,49.0,false,Completed Late
+WO0024,INC0001,AST0008,Critical,Planned,,false,Open Priority Repair
+WO0025,INC0006,AST0013,High,In Progress,,false,Open Priority Repair
+WO0026,INC0011,AST0018,Medium,Completed,10.0,true,Completed On Time
+WO0027,INC0016,AST0025,Low,Completed,17.0,true,Completed On Time
+WO0028,INC0021,AST0028,Critical,Planned,,false,Open Priority Repair
+WO0029,INC0026,AST0003,High,In Progress,,false,Open Priority Repair
+WO0030,INC0031,AST0008,Medium,Completed,38.0,true,Completed On Time
+WO0031,INC0036,AST0013,Low,Completed,45.0,true,Completed On Time
+WO0032,INC0041,AST0018,Critical,Planned,,false,Open Priority Repair
+WO0033,INC0046,AST0023,High,In Progress,,false,Open Priority Repair
+WO0034,INC0051,AST0028,Medium,Completed,66.0,false,Completed Late
+WO0035,INC0056,AST0005,Low,Completed,13.0,true,Completed On Time
+WO0036,INC0001,AST0008,Critical,Planned,,false,Open Priority Repair
+WO0037,INC0006,AST0013,High,In Progress,,false,Open Priority Repair
+WO0038,INC0011,AST0018,Medium,Completed,34.0,false,Completed Late
+WO0039,INC0016,AST0025,Low,Completed,41.0,false,Completed Late
+WO0040,INC0021,AST0028,Critical,Planned,,false,Open Priority Repair
+WO0041,INC0026,AST0003,High,In Progress,,false,Open Priority Repair
+WO0042,INC0031,AST0008,Medium,Completed,62.0,false,Completed Late
+WO0043,INC0036,AST0013,Low,Completed,9.0,true,Completed On Time
+WO0044,INC0041,AST0018,Critical,Planned,,false,Open Priority Repair
+WO0045,INC0046,AST0023,High,In Progress,,false,Open Priority Repair
+WO0046,INC0051,AST0028,Medium,Completed,30.0,false,Completed Late
+WO0047,INC0056,AST0005,Low,Completed,37.0,false,Completed Late
+WO0048,INC0001,AST0008,Critical,Planned,,false,Open Priority Repair
+WO0049,INC0006,AST0013,High,In Progress,,false,Open Priority Repair
+WO0050,INC0011,AST0018,Medium,Completed,58.0,false,Completed Late
+WO0051,INC0016,AST0025,Low,Completed,65.0,false,Completed Late
+WO0052,INC0021,AST0028,Critical,Planned,,false,Open Priority Repair
+WO0053,INC0026,AST0003,High,In Progress,,false,Open Priority Repair
+WO0054,INC0031,AST0008,Medium,Completed,26.0,true,Completed On Time
+WO0055,INC0036,AST0013,Low,Completed,33.0,true,Completed On Time

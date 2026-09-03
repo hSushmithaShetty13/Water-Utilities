@@ -1,0 +1,41 @@
+customer_id,account_holder_name,region,total_incidents,active_incidents,service_interruption_hours,service_impact_segment
+CUS0001,Synthetic Account 001,North West,0,0,0,No Recorded Impact
+CUS0002,Synthetic Account 002,North East,1,0,2.6,Moderate Impact
+CUS0003,Synthetic Account 003,Midlands,2,0,3.95,Moderate Impact
+CUS0004,Synthetic Account 004,South West,2,2,0.0,High Impact
+CUS0005,Synthetic Account 005,South East,0,0,0,No Recorded Impact
+CUS0006,Synthetic Account 006,North West,2,0,2.0,Moderate Impact
+CUS0007,Synthetic Account 007,North East,2,0,3.35,Moderate Impact
+CUS0008,Synthetic Account 008,Midlands,1,1,0.0,High Impact
+CUS0009,Synthetic Account 009,South West,0,0,0,No Recorded Impact
+CUS0010,Synthetic Account 010,South East,2,0,1.4,Moderate Impact
+CUS0011,Synthetic Account 011,North West,1,0,2.75,Moderate Impact
+CUS0012,Synthetic Account 012,North East,2,2,4.1,High Impact
+CUS0013,Synthetic Account 013,Midlands,0,0,0,No Recorded Impact
+CUS0014,Synthetic Account 014,South West,1,0,0.0,Moderate Impact
+CUS0015,Synthetic Account 015,South East,2,0,2.15,Moderate Impact
+CUS0016,Synthetic Account 016,North West,2,2,3.5,High Impact
+CUS0017,Synthetic Account 017,North East,0,0,0,No Recorded Impact
+CUS0018,Synthetic Account 018,Midlands,2,0,0.0,Moderate Impact
+CUS0019,Synthetic Account 019,South West,2,0,1.55,Moderate Impact
+CUS0020,Synthetic Account 020,South East,1,1,2.9,High Impact
+CUS0021,Synthetic Account 021,North West,0,0,0,No Recorded Impact
+CUS0022,Synthetic Account 022,North East,2,0,0.0,Moderate Impact
+CUS0023,Synthetic Account 023,Midlands,1,0,0.0,Moderate Impact
+CUS0024,Synthetic Account 024,South West,1,1,2.3,High Impact
+CUS0025,Synthetic Account 025,South East,0,0,0,No Recorded Impact
+CUS0026,Synthetic Account 026,North West,1,0,0.0,Moderate Impact
+CUS0027,Synthetic Account 027,North East,1,0,0.0,Moderate Impact
+CUS0028,Synthetic Account 028,Midlands,2,2,1.7,High Impact
+CUS0029,Synthetic Account 029,South West,0,0,0,No Recorded Impact
+CUS0030,Synthetic Account 030,South East,1,0,0.0,Moderate Impact
+CUS0031,Synthetic Account 031,North West,2,0,0.0,Moderate Impact
+CUS0032,Synthetic Account 032,North East,1,1,0.0,High Impact
+CUS0033,Synthetic Account 033,Midlands,0,0,0,No Recorded Impact
+CUS0034,Synthetic Account 034,South West,2,0,3.8,Moderate Impact
+CUS0035,Synthetic Account 035,South East,1,0,0.0,Moderate Impact
+CUS0036,Synthetic Account 036,North West,1,1,0.0,High Impact
+CUS0037,Synthetic Account 037,North East,0,0,0,No Recorded Impact
+CUS0038,Synthetic Account 038,Midlands,1,0,3.2,Moderate Impact
+CUS0039,Synthetic Account 039,South West,1,0,0.0,Moderate Impact
+CUS0040,Synthetic Account 040,South East,2,2,0.0,High Impact

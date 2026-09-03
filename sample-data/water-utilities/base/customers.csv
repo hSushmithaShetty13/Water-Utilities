@@ -1,0 +1,41 @@
+customer_id,account_holder_name,customer_type,region,postcode_area,service_status,joined_date
+CUS0001,Synthetic Account 001,Household,North West,B,Active,2018-02-17
+CUS0002,Synthetic Account 002,Household,North East,BS,Active,2018-04-05
+CUS0003,Synthetic Account 003,Household,Midlands,CA,Active,2018-05-22
+CUS0004,Synthetic Account 004,Household,South West,EX,Active,2018-07-08
+CUS0005,Synthetic Account 005,Business,South East,GL,Active,2018-08-24
+CUS0006,Synthetic Account 006,Household,North West,LS,Active,2018-10-10
+CUS0007,Synthetic Account 007,Household,North East,M,Active,2018-11-26
+CUS0008,Synthetic Account 008,Household,Midlands,NE,Active,2019-01-12
+CUS0009,Synthetic Account 009,Household,South West,OX,Active,2019-02-28
+CUS0010,Synthetic Account 010,Business,South East,RG,Active,2019-04-16
+CUS0011,Synthetic Account 011,Household,North West,B,Closed,2019-06-02
+CUS0012,Synthetic Account 012,Household,North East,BS,Active,2019-07-19
+CUS0013,Synthetic Account 013,Household,Midlands,CA,Active,2019-09-04
+CUS0014,Synthetic Account 014,Household,South West,EX,Active,2019-10-21
+CUS0015,Synthetic Account 015,Business,South East,GL,Active,2019-12-07
+CUS0016,Synthetic Account 016,Household,North West,LS,Active,2020-01-23
+CUS0017,Synthetic Account 017,Household,North East,M,Active,2020-03-10
+CUS0018,Synthetic Account 018,Household,Midlands,NE,Active,2020-04-26
+CUS0019,Synthetic Account 019,Household,South West,OX,Active,2020-06-12
+CUS0020,Synthetic Account 020,Business,South East,RG,Active,2020-07-29
+CUS0021,Synthetic Account 021,Household,North West,B,Active,2020-09-14
+CUS0022,Synthetic Account 022,Household,North East,BS,Closed,2020-10-31
+CUS0023,Synthetic Account 023,Household,Midlands,CA,Active,2020-12-17
+CUS0024,Synthetic Account 024,Household,South West,EX,Active,2021-02-02
+CUS0025,Synthetic Account 025,Business,South East,GL,Active,2021-03-21
+CUS0026,Synthetic Account 026,Household,North West,LS,Active,2021-05-07
+CUS0027,Synthetic Account 027,Household,North East,M,Active,2021-06-23
+CUS0028,Synthetic Account 028,Household,Midlands,NE,Active,2021-08-09
+CUS0029,Synthetic Account 029,Household,South West,OX,Active,2021-09-25
+CUS0030,Synthetic Account 030,Business,South East,RG,Active,2021-11-11
+CUS0031,Synthetic Account 031,Household,North West,B,Active,2021-12-28
+CUS0032,Synthetic Account 032,Household,North East,BS,Active,2022-02-13
+CUS0033,Synthetic Account 033,Household,Midlands,CA,Closed,2022-04-01
+CUS0034,Synthetic Account 034,Household,South West,EX,Active,2022-05-18
+CUS0035,Synthetic Account 035,Business,South East,GL,Active,2022-07-04
+CUS0036,Synthetic Account 036,Household,North West,LS,Active,2022-08-20
+CUS0037,Synthetic Account 037,Household,North East,M,Active,2022-10-06
+CUS0038,Synthetic Account 038,Household,Midlands,NE,Active,2022-11-22
+CUS0039,Synthetic Account 039,Household,South West,OX,Active,2023-01-08
+CUS0040,Synthetic Account 040,Business,South East,RG,Active,2023-02-24

@@ -1,0 +1,36 @@
+{
+  "dataAgentConfiguration": {
+    "name": "WaterUtilitiesOperationsAgent",
+    "description": "Two-source exercise for governed Water Utilities metrics and prepared operational-performance classifications.",
+    "sourceOfTruth": "config/domains/water-utilities.json",
+    "dataSources": [
+      {
+        "name": "WaterUtilitiesSemanticModel", "type": "semanticModel",
+        "selectedObjects": ["Customers", "Assets", "Incidents", "Work Orders", "Inspections"],
+        "description": "Use for standard customer, asset, incident, leakage, repair, inspection, interruption, and governed KPI questions.",
+        "routingTopics": ["open and repeat incidents", "active estimated leakage", "repair duration and on-time completion", "assets requiring attention", "customer and service interruption metrics"],
+        "notes": "Use Prep for AI, object descriptions, and explicit measures; semantic-model sources do not support example question/query pairs."
+      },
+      {
+        "name": "WaterUtilitiesDemo", "type": "lakehouse",
+        "selectedTables": ["routing_customer_service_impact", "routing_asset_attention_scorecard", "routing_repair_performance_mart"],
+        "excludedTables": ["base_customers", "base_assets", "base_incidents", "base_work_orders", "base_inspections"],
+        "description": "Use only for customer service-impact segments, asset attention bands, or repair performance bands.",
+        "routingTopics": ["customer impact segmentation", "combined latest inspection and high-severity incident attention bands", "repair completion performance bands"],
+        "exampleQueries": [
+          {"question": "Which customers are in the high impact segment?", "query": "SELECT customer_id, account_holder_name, active_incidents, service_interruption_hours FROM routing_customer_service_impact WHERE service_impact_segment = 'High Impact' ORDER BY customer_id"},
+          {"question": "Which assets need immediate review?", "query": "SELECT asset_id, asset_type, active_high_severity_incidents, latest_inspection_result FROM routing_asset_attention_scorecard WHERE attention_band = 'Immediate Review' ORDER BY asset_id"},
+          {"question": "Which completed repairs were late?", "query": "SELECT work_order_id, incident_id, repair_duration_hours FROM routing_repair_performance_mart WHERE performance_band = 'Completed Late' ORDER BY work_order_id"}
+        ]
+      }
+    ],
+    "agentInstructions": "Use WaterUtilitiesSemanticModel for standard governed measures. Use WaterUtilitiesDemo only for the three prepared routing classifications. Prefer one source. The data is synthetic: do not imply live status, reveal sensitive infrastructure details, direct field operations, or claim regulatory compliance.",
+    "routingScenarios": [
+      {"question": "How many open incidents do we have?", "expectedSource": "WaterUtilitiesSemanticModel", "expectedObject": "Open Incidents"},
+      {"question": "What percentage of completed work was on time?", "expectedSource": "WaterUtilitiesSemanticModel", "expectedObject": "Work Completed On Time"},
+      {"question": "Which customers are in the high impact segment?", "expectedSource": "WaterUtilitiesDemo", "expectedObject": "routing_customer_service_impact"},
+      {"question": "Which assets need immediate review?", "expectedSource": "WaterUtilitiesDemo", "expectedObject": "routing_asset_attention_scorecard"},
+      {"question": "Which completed repairs were late?", "expectedSource": "WaterUtilitiesDemo", "expectedObject": "routing_repair_performance_mart"}
+    ]
+  }
+}

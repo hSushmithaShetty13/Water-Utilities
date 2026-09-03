@@ -1,0 +1,174 @@
+{
+  "schemaVersion": "1.0",
+  "domain": {
+    "id": "water-utilities",
+    "displayName": "Water Utilities Operations",
+    "description": "Synthetic UK water customer, asset, leakage incident, repair, inspection, service interruption, and performance analytics.",
+    "culture": "en-GB",
+    "currency": "GBP"
+  },
+  "artifacts": {
+    "folder": "water_utilities_hackathon",
+    "lakehouse": "WaterUtilitiesDemo",
+    "optimizedModel": "WaterUtilitiesSemanticModel",
+    "ontology": "WaterUtilitiesOntology",
+    "dataAgent": "WaterUtilitiesOperationsAgent"
+  },
+  "tables": [
+    {
+      "sourcePath": "sample-data/water-utilities/base/customers.csv", "lakehouseName": "base_customers", "modelName": "Customers",
+      "description": "One row per fictional water service account holder; customer and account holder are synonyms.", "includeInModels": true,
+      "columns": [
+        {"source": "customer_id", "name": "Customer ID", "type": "string", "description": "Stable synthetic customer key.", "hidden": true},
+        {"source": "account_holder_name", "name": "Account Holder Name", "type": "string", "description": "Fictional account label, never a real identity."},
+        {"source": "customer_type", "name": "Customer Type", "type": "string", "description": "Household or Business."},
+        {"source": "region", "name": "Customer Region", "type": "string", "description": "Broad synthetic UK reporting region."},
+        {"source": "postcode_area", "name": "Postcode Area", "type": "string", "description": "Broad fictional postcode area only."},
+        {"source": "service_status", "name": "Service Status", "type": "string", "description": "Current synthetic service relationship status."},
+        {"source": "joined_date", "name": "Joined Date", "type": "date", "description": "Synthetic service start date.", "formatString": "dd/MM/yyyy"}
+      ]
+    },
+    {
+      "sourcePath": "sample-data/water-utilities/base/assets.csv", "lakehouseName": "base_assets", "modelName": "Assets",
+      "description": "One row per fictional maintainable water asset with broad region and no precise location.", "includeInModels": true,
+      "columns": [
+        {"source": "asset_id", "name": "Asset ID", "type": "string", "description": "Stable synthetic asset key."},
+        {"source": "asset_type", "name": "Asset Type", "type": "string", "description": "Synthetic infrastructure category."},
+        {"source": "region", "name": "Asset Region", "type": "string", "description": "Broad synthetic UK reporting region."},
+        {"source": "commissioned_date", "name": "Commissioned Date", "type": "date", "description": "Synthetic commissioning date.", "formatString": "dd/MM/yyyy"},
+        {"source": "asset_status", "name": "Asset Status", "type": "string", "description": "Active or Inactive."},
+        {"source": "criticality", "name": "Criticality", "type": "string", "description": "Demonstration analytical classification, not an operational risk rating."}
+      ]
+    },
+    {
+      "sourcePath": "sample-data/water-utilities/base/incidents.csv", "lakehouseName": "base_incidents", "modelName": "Incidents",
+      "description": "One row per fictional leakage or service incident affecting one primary asset and optionally one customer.", "includeInModels": true,
+      "columns": [
+        {"source": "incident_id", "name": "Incident ID", "type": "string", "description": "Stable synthetic incident key."},
+        {"source": "asset_id", "name": "Asset ID", "type": "string", "description": "Primary affected asset key.", "hidden": true},
+        {"source": "customer_id", "name": "Customer ID", "type": "string", "description": "Optionally affected customer key.", "hidden": true},
+        {"source": "incident_type", "name": "Incident Type", "type": "string", "description": "Leakage or service event category."},
+        {"source": "severity", "name": "Severity", "type": "string", "description": "Critical, High, Medium, or Low; high severity means Critical or High."},
+        {"source": "status", "name": "Incident Status", "type": "string", "description": "Open, Investigating, Resolved, or Closed."},
+        {"source": "opened_at", "name": "Opened At", "type": "dateTime", "description": "Synthetic incident opening timestamp."},
+        {"source": "resolved_at", "name": "Resolved At", "type": "dateTime", "description": "Synthetic resolution timestamp when resolved."},
+        {"source": "estimated_leakage_m3", "name": "Estimated Leakage Volume", "type": "double", "description": "Estimated synthetic leakage volume in cubic metres.", "formatString": "#,##0.00"},
+        {"source": "service_interruption_hours", "name": "Service Interruption Hours", "type": "double", "description": "Synthetic interruption duration in hours.", "formatString": "#,##0.00"},
+        {"source": "repeat_incident_flag", "name": "Repeat Incident Flag", "type": "boolean", "description": "True when the asset had an earlier incident in the prior 30 days."}
+      ]
+    },
+    {
+      "sourcePath": "sample-data/water-utilities/base/work_orders.csv", "lakehouseName": "base_work_orders", "modelName": "Work Orders",
+      "description": "One row per fictional repair work order belonging to one incident.", "includeInModels": true,
+      "columns": [
+        {"source": "work_order_id", "name": "Work Order ID", "type": "string", "description": "Stable synthetic work order key."},
+        {"source": "incident_id", "name": "Incident ID", "type": "string", "description": "Owning incident key.", "hidden": true},
+        {"source": "work_type", "name": "Work Type", "type": "string", "description": "Synthetic repair activity category."},
+        {"source": "priority", "name": "Priority", "type": "string", "description": "Demonstration scheduling priority, not field direction."},
+        {"source": "status", "name": "Work Order Status", "type": "string", "description": "Planned, In Progress, or Completed."},
+        {"source": "raised_at", "name": "Raised At", "type": "dateTime", "description": "Synthetic work order creation timestamp."},
+        {"source": "work_started_at", "name": "Work Started At", "type": "dateTime", "description": "Synthetic work start timestamp."},
+        {"source": "promised_completion_at", "name": "Promised Completion At", "type": "dateTime", "description": "Synthetic promised completion timestamp."},
+        {"source": "work_completed_at", "name": "Work Completed At", "type": "dateTime", "description": "Synthetic completion timestamp for completed work."},
+        {"source": "crew_region", "name": "Crew Region", "type": "string", "description": "Broad reporting region without team identities or locations."}
+      ]
+    },
+    {
+      "sourcePath": "sample-data/water-utilities/base/inspections.csv", "lakehouseName": "base_inspections", "modelName": "Inspections",
+      "description": "One row per fictional inspection of one water asset.", "includeInModels": true,
+      "columns": [
+        {"source": "inspection_id", "name": "Inspection ID", "type": "string", "description": "Stable synthetic inspection key."},
+        {"source": "asset_id", "name": "Asset ID", "type": "string", "description": "Inspected asset key.", "hidden": true},
+        {"source": "inspection_type", "name": "Inspection Type", "type": "string", "description": "Synthetic inspection category."},
+        {"source": "inspected_at", "name": "Inspected At", "type": "dateTime", "description": "Synthetic inspection timestamp."},
+        {"source": "result", "name": "Inspection Result", "type": "string", "description": "Passed, Advisory, or Failed."},
+        {"source": "condition_score", "name": "Condition Score", "type": "int64", "description": "Synthetic one-to-five condition score."},
+        {"source": "follow_up_required", "name": "Follow-up Required", "type": "boolean", "description": "Demonstration follow-up flag, not field direction."}
+      ]
+    },
+    {
+      "sourcePath": "sample-data/water-utilities/derived-routing/customer_service_impact.csv", "lakehouseName": "routing_customer_service_impact", "modelName": "Customer Service Impact", "description": "Customer-level incident and interruption classification for routing demonstrations.", "includeInModels": false,
+      "columns": [
+        {"source": "customer_id", "name": "Customer ID", "type": "string"}, {"source": "account_holder_name", "name": "Account Holder Name", "type": "string"}, {"source": "region", "name": "Region", "type": "string"}, {"source": "total_incidents", "name": "Total Incidents", "type": "int64"}, {"source": "active_incidents", "name": "Active Incidents", "type": "int64"}, {"source": "service_interruption_hours", "name": "Service Interruption Hours", "type": "double"}, {"source": "service_impact_segment", "name": "Service Impact Segment", "type": "string"}
+      ]
+    },
+    {
+      "sourcePath": "sample-data/water-utilities/derived-routing/asset_attention_scorecard.csv", "lakehouseName": "routing_asset_attention_scorecard", "modelName": "Asset Attention Scorecard", "description": "Asset-level latest-inspection and active-incident classification for routing demonstrations.", "includeInModels": false,
+      "columns": [
+        {"source": "asset_id", "name": "Asset ID", "type": "string"}, {"source": "asset_type", "name": "Asset Type", "type": "string"}, {"source": "region", "name": "Region", "type": "string"}, {"source": "asset_status", "name": "Asset Status", "type": "string"}, {"source": "active_high_severity_incidents", "name": "Active High Severity Incidents", "type": "int64"}, {"source": "latest_inspection_at", "name": "Latest Inspection At", "type": "dateTime"}, {"source": "latest_inspection_result", "name": "Latest Inspection Result", "type": "string"}, {"source": "requires_attention", "name": "Requires Attention", "type": "boolean"}, {"source": "attention_band", "name": "Attention Band", "type": "string"}
+      ]
+    },
+    {
+      "sourcePath": "sample-data/water-utilities/derived-routing/repair_performance_mart.csv", "lakehouseName": "routing_repair_performance_mart", "modelName": "Repair Performance", "description": "Work-order-level repair duration and completion classification for routing demonstrations.", "includeInModels": false,
+      "columns": [
+        {"source": "work_order_id", "name": "Work Order ID", "type": "string"}, {"source": "incident_id", "name": "Incident ID", "type": "string"}, {"source": "asset_id", "name": "Asset ID", "type": "string"}, {"source": "incident_severity", "name": "Incident Severity", "type": "string"}, {"source": "work_order_status", "name": "Work Order Status", "type": "string"}, {"source": "repair_duration_hours", "name": "Repair Duration Hours", "type": "double"}, {"source": "completed_on_time", "name": "Completed On Time", "type": "boolean"}, {"source": "performance_band", "name": "Performance Band", "type": "string"}
+      ]
+    }
+  ],
+  "relationships": [
+    {"name": "Incidents to Customers", "fromTable": "Incidents", "fromColumn": "Customer ID", "toTable": "Customers", "toColumn": "Customer ID", "crossFilter": "oneDirection"},
+    {"name": "Incidents to Assets", "fromTable": "Incidents", "fromColumn": "Asset ID", "toTable": "Assets", "toColumn": "Asset ID", "crossFilter": "oneDirection"},
+    {"name": "Work Orders to Incidents", "fromTable": "Work Orders", "fromColumn": "Incident ID", "toTable": "Incidents", "toColumn": "Incident ID", "crossFilter": "oneDirection"},
+    {"name": "Inspections to Assets", "fromTable": "Inspections", "fromColumn": "Asset ID", "toTable": "Assets", "toColumn": "Asset ID", "crossFilter": "oneDirection"}
+  ],
+  "semanticModels": {
+    "optimized": {
+      "tableNames": ["Customers", "Assets", "Incidents", "Work Orders", "Inspections", "_Measures"],
+      "useRelationships": true,
+      "measures": [
+        {"table": "Customers", "name": "Total Customers", "expression": "COUNTROWS(Customers)", "formatString": "#,##0", "description": "Number of synthetic account holders."},
+        {"table": "Incidents", "name": "Open Incidents", "expression": "CALCULATE(COUNTROWS(Incidents), Incidents[Incident Status] IN {\"Open\", \"Investigating\"})", "formatString": "#,##0", "description": "Incidents whose status is Open or Investigating."},
+        {"table": "Incidents", "name": "Total Estimated Leakage", "expression": "CALCULATE(SUM(Incidents[Estimated Leakage Volume]), Incidents[Incident Status] IN {\"Open\", \"Investigating\"})", "formatString": "#,##0.00 \"m3\"", "description": "Estimated leakage volume for active incidents in cubic metres."},
+        {"table": "Work Orders", "name": "Average Repair Duration", "expression": "AVERAGEX(FILTER('Work Orders', 'Work Orders'[Work Order Status] = \"Completed\" && NOT ISBLANK('Work Orders'[Work Started At]) && NOT ISBLANK('Work Orders'[Work Completed At])), DATEDIFF('Work Orders'[Work Started At], 'Work Orders'[Work Completed At], MINUTE) / 60.0)", "formatString": "#,##0.00 \"hours\"", "description": "Average hours from start to completion for completed work orders."},
+        {"table": "Incidents", "name": "Repeat Incidents", "expression": "CALCULATE(COUNTROWS(Incidents), Incidents[Repeat Incident Flag] = TRUE())", "formatString": "#,##0", "description": "Incidents on an asset with another earlier incident in the prior 30 days."},
+        {"table": "Work Orders", "name": "Work Completed On Time", "expression": "DIVIDE(CALCULATE(COUNTROWS('Work Orders'), 'Work Orders'[Work Order Status] = \"Completed\", 'Work Orders'[Work Completed At] <= 'Work Orders'[Promised Completion At]), CALCULATE(COUNTROWS('Work Orders'), 'Work Orders'[Work Order Status] = \"Completed\"), 0)", "formatString": "0.00%", "description": "Percentage of completed work orders completed on or before promise."},
+        {"table": "Assets", "name": "Assets Requiring Attention", "expression": "SUMX(FILTER(Assets, Assets[Asset Status] = \"Active\"), VAR CurrentAsset = Assets[Asset ID] VAR HighOpen = CALCULATE(COUNTROWS(Incidents), Incidents[Incident Status] IN {\"Open\", \"Investigating\"}, Incidents[Severity] IN {\"Critical\", \"High\"}) VAR LatestInspection = CALCULATE(MAX(Inspections[Inspected At])) VAR LatestFailed = CALCULATE(COUNTROWS(Inspections), Inspections[Inspected At] = LatestInspection, Inspections[Inspection Result] = \"Failed\") RETURN IF(HighOpen > 0 || LatestFailed > 0, 1, 0))", "formatString": "#,##0", "description": "Active assets with an open high-severity incident or failed latest inspection."},
+        {"table": "Incidents", "name": "Customers Affected", "expression": "CALCULATE(DISTINCTCOUNT(Incidents[Customer ID]), Incidents[Incident Status] IN {\"Open\", \"Investigating\"}, Incidents[Customer ID] <> BLANK())", "formatString": "#,##0", "description": "Customers linked to active incidents."},
+        {"table": "Incidents", "name": "Service Interruption Hours", "expression": "SUM(Incidents[Service Interruption Hours])", "formatString": "#,##0.00 \"hours\"", "description": "Total synthetic service interruption hours."}
+      ]
+    }
+  },
+  "ai": {
+    "instructions": "Business rules:\n- Customer and account holder are synonyms. Incident, event, and issue are synonyms. Repair and work order are related but not synonyms.\n- Active incidents have status Open or Investigating. High severity means Critical or High.\n- Use explicit governed measures for leakage, repair duration, repeat incidents, on-time work, and assets requiring attention.\nSafety and privacy:\n- All records are synthetic. Do not imply live status or regulatory compliance.\n- Do not direct field operations or provide safety-critical, credential, precise-location, vulnerability, or maintenance-approval advice.",
+    "schema": {
+      "Customers": ["Customer ID", "Account Holder Name", "Customer Type", "Customer Region", "Service Status"],
+      "Assets": ["Asset ID", "Asset Type", "Asset Region", "Asset Status", "Criticality"],
+      "Incidents": ["Incident ID", "Incident Type", "Severity", "Incident Status", "Opened At", "Estimated Leakage Volume", "Repeat Incident Flag"],
+      "Work Orders": ["Work Order ID", "Work Type", "Priority", "Work Order Status", "Work Started At", "Promised Completion At", "Work Completed At"],
+      "Inspections": ["Inspection ID", "Inspection Type", "Inspected At", "Inspection Result", "Condition Score"],
+      "_Measures": ["Open Incidents", "Total Estimated Leakage", "Average Repair Duration", "Repeat Incidents", "Work Completed On Time", "Assets Requiring Attention", "Customers Affected", "Service Interruption Hours"]
+    },
+    "verifiedAnswerCandidates": [
+      {"question": "How many open incidents do we have?", "measure": "Open Incidents", "description": "Open or Investigating incidents."},
+      {"question": "What is total estimated leakage for active incidents?", "measure": "Total Estimated Leakage", "description": "Synthetic active-incident leakage volume."},
+      {"question": "What percentage of completed work was on time?", "measure": "Work Completed On Time", "description": "Completed on or before promise."},
+      {"question": "How many assets require attention?", "measure": "Assets Requiring Attention", "description": "Governed combined incident and inspection rule."}
+    ]
+  },
+  "ontology": {
+    "entities": [
+      {"name": "Customer", "table": "base_customers", "key": "customer_id", "displayProperty": "account_holder_name"},
+      {"name": "Asset", "table": "base_assets", "key": "asset_id", "displayProperty": "asset_type"},
+      {"name": "Incident", "table": "base_incidents", "key": "incident_id", "displayProperty": "incident_type"},
+      {"name": "WorkOrder", "table": "base_work_orders", "key": "work_order_id", "displayProperty": "work_type"},
+      {"name": "Inspection", "table": "base_inspections", "key": "inspection_id", "displayProperty": "inspection_type"}
+    ],
+    "relationships": [
+      {"name": "AssetHasIncident", "from": "Asset", "to": "Incident", "table": "base_incidents", "fromColumn": "asset_id", "toColumn": "incident_id"},
+      {"name": "IncidentHasWorkOrder", "from": "Incident", "to": "WorkOrder", "table": "base_work_orders", "fromColumn": "incident_id", "toColumn": "work_order_id"},
+      {"name": "AssetHasInspection", "from": "Asset", "to": "Inspection", "table": "base_inspections", "fromColumn": "asset_id", "toColumn": "inspection_id"}
+    ]
+  },
+  "agent": {
+    "description": "Synthetic Water Utilities Operations agent for governed performance metrics and prepared routing analysis.",
+    "instructions": "Use WaterUtilitiesSemanticModel for standard governed KPIs. Use WaterUtilitiesDemo only for service-impact segments, asset attention bands, and repair performance bands. Prefer one source. State that data is synthetic when confusion with live operations is possible. Never direct safety-critical operations or claim compliance.",
+    "sources": [
+      {"name": "WaterUtilitiesSemanticModel", "artifact": "optimizedModel", "objects": ["Customers", "Assets", "Incidents", "Work Orders", "Inspections"], "description": "Optimized Direct Lake model for standard governed customer, asset, incident, repair, inspection, leakage, interruption, and performance questions.", "instructions": "Use the explicit governed measures and model relationships.", "examples": []},
+      {"name": "WaterUtilitiesDemo", "artifact": "lakehouse", "objects": ["routing_customer_service_impact", "routing_asset_attention_scorecard", "routing_repair_performance_mart"], "description": "Prepared synthetic marts for customer service-impact segments, asset attention bands, and repair performance bands.", "instructions": "Use only for routing classifications and prepared cross-entity scenarios.", "examples": [
+        {"question": "Which customers are in the high impact segment?", "query": "SELECT customer_id, account_holder_name, active_incidents, service_interruption_hours FROM routing_customer_service_impact WHERE service_impact_segment = 'High Impact' ORDER BY customer_id"},
+        {"question": "Which assets need immediate review?", "query": "SELECT asset_id, asset_type, active_high_severity_incidents, latest_inspection_result FROM routing_asset_attention_scorecard WHERE attention_band = 'Immediate Review' ORDER BY asset_id"},
+        {"question": "Which completed repairs were late?", "query": "SELECT work_order_id, incident_id, repair_duration_hours FROM routing_repair_performance_mart WHERE performance_band = 'Completed Late' ORDER BY work_order_id"}
+      ]}
+    ]
+  }
+}

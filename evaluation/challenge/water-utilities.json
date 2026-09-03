@@ -1,0 +1,35 @@
+{
+  "metadata": {
+    "name": "Water Utilities Operations Data Agent Challenge",
+    "version": "1.1",
+    "description": "Eight scored questions calculated from the deterministic synthetic Water Utilities base CSVs.",
+    "source_data_version": "Deterministic seed 20260902; dataset as of 2026-08-31",
+    "total_queries": 8
+  },
+  "evaluation_queries": [
+    {
+      "id": "WU001", "question": "How many open incidents do we have?", "paraphrase": "How many events are open or being investigated?", "category": "terminology", "expected_source": "WaterUtilitiesSemanticModel", "expected_measure": "Open Incidents", "ground_truth_answer": 30, "answer_type": "number", "answer_unit": "count", "ground_truth_sql": "SELECT COUNT(*) FROM base_incidents WHERE status IN ('Open', 'Investigating')", "difficulty": "easy", "tests_routing": false, "tests_measure_selection": true
+    },
+    {
+      "id": "WU002", "question": "What is total estimated leakage for active incidents?", "paraphrase": "How many cubic metres of estimated leakage are associated with open or investigating issues?", "category": "business_rule", "expected_source": "WaterUtilitiesSemanticModel", "expected_measure": "Total Estimated Leakage", "ground_truth_answer": 2771.25, "answer_type": "number", "answer_unit": "m3", "ground_truth_sql": "SELECT ROUND(SUM(estimated_leakage_m3), 2) FROM base_incidents WHERE status IN ('Open', 'Investigating')", "difficulty": "medium", "tests_routing": false, "tests_measure_selection": true
+    },
+    {
+      "id": "WU003", "question": "What is the average repair duration for completed work orders?", "paraphrase": "On average, how many hours elapsed between work starting and finishing for completed repairs?", "category": "measure_discovery", "expected_source": "WaterUtilitiesSemanticModel", "expected_measure": "Average Repair Duration", "ground_truth_answer": 36.07, "answer_type": "number", "answer_unit": "hours", "ground_truth_sql": "SELECT ROUND(AVG(DATEDIFF(minute, work_started_at, work_completed_at) / 60.0), 2) FROM base_work_orders WHERE status = 'Completed'", "difficulty": "medium", "tests_routing": false, "tests_measure_selection": true
+    },
+    {
+      "id": "WU004", "question": "How many repeat incidents occurred?", "paraphrase": "How many incidents happened on an asset within 30 days of an earlier incident?", "category": "business_rule", "expected_source": "WaterUtilitiesSemanticModel", "expected_measure": "Repeat Incidents", "ground_truth_answer": 7, "answer_type": "number", "answer_unit": "count", "ground_truth_sql": "SELECT COUNT(*) FROM base_incidents WHERE repeat_incident_flag = true", "difficulty": "medium", "tests_routing": false, "tests_measure_selection": true
+    },
+    {
+      "id": "WU005", "question": "What percentage of completed work orders were completed on time?", "paraphrase": "What share of finished repairs met the promised completion timestamp?", "category": "business_rule", "expected_source": "WaterUtilitiesSemanticModel", "expected_measure": "Work Completed On Time", "ground_truth_answer": 46.43, "answer_type": "number", "answer_unit": "percent", "ground_truth_detail": "13 of 28 completed work orders", "ground_truth_sql": "SELECT ROUND(100.0 * SUM(CASE WHEN work_completed_at <= promised_completion_at THEN 1 ELSE 0 END) / COUNT(*), 2) FROM base_work_orders WHERE status = 'Completed'", "difficulty": "hard", "tests_routing": false, "tests_measure_selection": true
+    },
+    {
+      "id": "WU006", "question": "How many assets require attention?", "paraphrase": "Count active assets with an open high-severity incident or a failed latest inspection.", "category": "grounding", "expected_source": "WaterUtilitiesSemanticModel", "expected_measure": "Assets Requiring Attention", "ground_truth_answer": 14, "answer_type": "number", "answer_unit": "count", "ground_truth_detail": ["AST0002", "AST0004", "AST0006", "AST0008", "AST0010", "AST0012", "AST0016", "AST0018", "AST0020", "AST0022", "AST0024", "AST0026", "AST0028", "AST0030"], "ground_truth_sql": "Use active assets where an Open or Investigating Critical/High incident exists, or the latest inspection result is Failed.", "difficulty": "hard", "tests_routing": false, "tests_measure_selection": true
+    },
+    {
+      "id": "WU007", "question": "Which asset region has the highest total estimated leakage from active incidents, and what is that total?", "paraphrase": "Find the region with the most leakage across open or investigating incidents and give its volume.", "category": "ranking", "expected_source": "WaterUtilitiesSemanticModel", "expected_measure": "Total Estimated Leakage", "ground_truth_answer": 738.75, "answer_type": "number", "answer_unit": "m3", "ground_truth_detail": "North East", "ground_truth_sql": "SELECT TOP 1 a.region, ROUND(SUM(i.estimated_leakage_m3), 2) AS total_leakage_m3 FROM base_incidents i JOIN base_assets a ON a.asset_id = i.asset_id WHERE i.status IN ('Open', 'Investigating') GROUP BY a.region ORDER BY total_leakage_m3 DESC, a.region", "difficulty": "hard", "tests_routing": false, "tests_measure_selection": true
+    },
+    {
+      "id": "WU008", "question": "What percentage of completed work orders linked to service interruption incidents were completed on time?", "paraphrase": "Of finished repairs for service interruption events, what share met the promised completion timestamp?", "category": "cross_entity_filter", "expected_source": "WaterUtilitiesSemanticModel", "expected_measure": "Work Completed On Time", "ground_truth_answer": 42.86, "answer_type": "number", "answer_unit": "percent", "ground_truth_detail": "6 of 14 completed work orders", "ground_truth_sql": "SELECT ROUND(100.0 * SUM(CASE WHEN w.work_completed_at <= w.promised_completion_at THEN 1 ELSE 0 END) / COUNT(*), 2) FROM base_work_orders w JOIN base_incidents i ON i.incident_id = w.incident_id WHERE w.status = 'Completed' AND i.incident_type = 'Service Interruption'", "difficulty": "hard", "tests_routing": false, "tests_measure_selection": true
+    }
+  ]
+}

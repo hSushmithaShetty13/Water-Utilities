@@ -1,0 +1,190 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/hSushmithaShetty13/Water-Utilities/config/domain-profile.schema.json",
+  "title": "Fabric Data Agent Hackathon Domain Profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "domain",
+    "artifacts",
+    "tables",
+    "relationships",
+    "semanticModels",
+    "ai",
+    "agent"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "domain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "displayName", "description", "culture", "currency"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]+$" },
+        "displayName": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "minLength": 1 },
+        "culture": { "type": "string", "minLength": 2 },
+        "currency": { "type": "string", "pattern": "^[A-Z]{3}$" }
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["folder", "lakehouse", "optimizedModel", "ontology", "dataAgent"],
+      "properties": {
+        "folder": { "type": "string", "minLength": 1 },
+        "lakehouse": { "type": "string", "minLength": 1 },
+        "optimizedModel": { "type": "string", "minLength": 1 },
+        "ontology": { "type": "string", "minLength": 1 },
+        "dataAgent": { "type": "string", "minLength": 1 }
+      }
+    },
+    "tables": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/table" }
+    },
+    "relationships": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/relationship" }
+    },
+    "semanticModels": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["optimized"],
+      "properties": {
+        "optimized": { "$ref": "#/$defs/model" }
+      }
+    },
+    "ai": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["instructions", "schema", "verifiedAnswerCandidates"],
+      "properties": {
+        "instructions": { "type": "string", "minLength": 1, "maxLength": 10000 },
+        "schema": {
+          "type": "object",
+          "additionalProperties": { "type": "array", "items": { "type": "string" } }
+        },
+        "verifiedAnswerCandidates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["question", "measure"],
+            "properties": {
+              "question": { "type": "string", "minLength": 1 },
+              "measure": { "type": "string", "minLength": 1 },
+              "description": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "ontology": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "agent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["description", "instructions", "sources"],
+      "properties": {
+        "description": { "type": "string", "minLength": 1 },
+        "instructions": { "type": "string", "minLength": 1 },
+        "sources": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "artifact", "objects", "description", "instructions", "examples"],
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "artifact": { "enum": ["optimizedModel", "lakehouse"] },
+              "objects": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+              "description": { "type": "string", "minLength": 1 },
+              "instructions": { "type": "string", "minLength": 1 },
+              "examples": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["question"],
+                  "properties": {
+                    "question": { "type": "string", "minLength": 1 },
+                    "query": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "column": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "name", "type"],
+      "properties": {
+        "source": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "type": { "enum": ["string", "int64", "double", "date", "dateTime", "boolean"] },
+        "description": { "type": "string" },
+        "hidden": { "type": "boolean", "default": false },
+        "formatString": { "type": "string" }
+      }
+    },
+    "table": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourcePath", "lakehouseName", "modelName", "description", "columns"],
+      "properties": {
+        "sourcePath": { "type": "string", "pattern": "^[^/]+/.+\\.csv$" },
+        "lakehouseName": { "type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$" },
+        "modelName": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "minLength": 1 },
+        "includeInModels": { "type": "boolean", "default": true },
+        "columns": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/column" } }
+      }
+    },
+    "relationship": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "fromTable", "fromColumn", "toTable", "toColumn"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "fromTable": { "type": "string", "minLength": 1 },
+        "fromColumn": { "type": "string", "minLength": 1 },
+        "toTable": { "type": "string", "minLength": 1 },
+        "toColumn": { "type": "string", "minLength": 1 },
+        "crossFilter": { "enum": ["oneDirection", "bothDirections"] }
+      }
+    },
+    "measure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["table", "name", "expression", "formatString", "description"],
+      "properties": {
+        "table": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "expression": { "type": "string", "minLength": 1 },
+        "formatString": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "minLength": 1 }
+      }
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tableNames", "measures"],
+      "properties": {
+        "tableNames": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "measures": { "type": "array", "items": { "$ref": "#/$defs/measure" } },
+        "useRelationships": { "type": "boolean" }
+      }
+    }
+  }
+}

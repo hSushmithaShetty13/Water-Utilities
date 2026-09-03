@@ -1,0 +1,31 @@
+asset_id,asset_type,region,commissioned_date,asset_status,criticality
+AST0001,Water Main,Midlands,1985-11-08,Active,Medium
+AST0002,Pumping Station,South West,1986-09-15,Active,High
+AST0003,Service Reservoir,South East,1987-07-23,Active,Low
+AST0004,Valve,North West,1988-05-29,Active,Medium
+AST0005,Metering Point,North East,1989-04-05,Active,High
+AST0006,Water Main,Midlands,1990-02-10,Active,Low
+AST0007,Pumping Station,South West,1990-12-18,Active,Medium
+AST0008,Service Reservoir,South East,1991-10-25,Active,High
+AST0009,Valve,North West,1992-08-31,Active,Low
+AST0010,Metering Point,North East,1993-07-08,Active,Medium
+AST0011,Water Main,Midlands,1994-05-15,Active,High
+AST0012,Pumping Station,South West,1995-03-22,Active,Low
+AST0013,Service Reservoir,South East,1996-01-27,Active,Medium
+AST0014,Valve,North West,1996-12-03,Inactive,High
+AST0015,Metering Point,North East,1997-10-10,Active,Low
+AST0016,Water Main,Midlands,1998-08-17,Active,Medium
+AST0017,Pumping Station,South West,1999-06-24,Active,High
+AST0018,Service Reservoir,South East,2000-04-30,Active,Low
+AST0019,Valve,North West,2001-03-07,Active,Medium
+AST0020,Metering Point,North East,2002-01-12,Active,High
+AST0021,Water Main,Midlands,2002-11-19,Active,Low
+AST0022,Pumping Station,South West,2003-09-26,Active,Medium
+AST0023,Service Reservoir,South East,2004-08-02,Active,High
+AST0024,Valve,North West,2005-06-09,Active,Low
+AST0025,Metering Point,North East,2006-04-16,Active,Medium
+AST0026,Water Main,Midlands,2007-02-21,Active,High
+AST0027,Pumping Station,South West,2007-12-29,Active,Low
+AST0028,Service Reservoir,South East,2008-11-04,Active,Medium
+AST0029,Valve,North West,2009-09-11,Inactive,High
+AST0030,Metering Point,North East,2010-07-19,Active,Low

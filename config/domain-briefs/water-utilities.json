@@ -1,0 +1,100 @@
+{
+  "domain": {
+    "id": "water-utilities",
+    "displayName": "Water Utilities Operations",
+    "description": "Synthetic UK water customer, asset, leakage incident, repair work order, inspection, service interruption, and operational performance analytics for a Fabric Data Agent hackathon.",
+    "culture": "en-GB",
+    "currency": "GBP"
+  },
+  "audience": [
+    "regional operations manager",
+    "service-performance analyst"
+  ],
+  "entities": [
+    {
+      "name": "Customer",
+      "grain": "one synthetic water service account holder",
+      "key": "customer_id"
+    },
+    {
+      "name": "Asset",
+      "grain": "one synthetic maintainable water infrastructure asset",
+      "key": "asset_id"
+    },
+    {
+      "name": "Incident",
+      "grain": "one synthetic leakage or service interruption incident affecting one primary asset and optionally one customer",
+      "key": "incident_id"
+    },
+    {
+      "name": "Work Order",
+      "grain": "one synthetic repair work order belonging to one incident",
+      "key": "work_order_id"
+    },
+    {
+      "name": "Inspection",
+      "grain": "one synthetic inspection of one asset",
+      "key": "inspection_id"
+    }
+  ],
+  "relationships": [
+    "A Customer may have many Incidents through customer_id; an Incident may affect no individual customer.",
+    "An Asset has many Incidents through asset_id, and each Incident has one primary Asset.",
+    "An Incident has many Work Orders through incident_id, and each Work Order belongs to one Incident.",
+    "An Asset has many Inspections through asset_id, and each Inspection belongs to one Asset."
+  ],
+  "metrics": [
+    {
+      "name": "Open Incidents",
+      "definition": "Count of incidents whose status is Open or Investigating."
+    },
+    {
+      "name": "Total Estimated Leakage",
+      "definition": "Sum of estimated_leakage_m3 for incidents whose status is Open or Investigating."
+    },
+    {
+      "name": "Average Repair Duration",
+      "definition": "Average elapsed hours from work_started_at to work_completed_at for completed work orders only."
+    },
+    {
+      "name": "Repeat Incidents",
+      "definition": "Count of incidents whose asset had another incident with an earlier opened_at timestamp in the prior 30 days."
+    },
+    {
+      "name": "Work Completed On Time",
+      "definition": "Percentage of completed work orders whose work_completed_at is on or before promised_completion_at."
+    },
+    {
+      "name": "Assets Requiring Attention",
+      "definition": "Distinct count of active assets with either an open Critical or High incident or a latest inspection result of Failed."
+    },
+    {
+      "name": "Customers Affected",
+      "definition": "Distinct count of customers linked to an Open or Investigating incident."
+    },
+    {
+      "name": "Service Interruption Hours",
+      "definition": "Sum of service_interruption_hours across all incidents."
+    }
+  ],
+  "terminology": {
+    "customer": "Synonym for account holder in this demonstration.",
+    "account holder": "Synonym for customer in this demonstration.",
+    "incident": "May also be called an event or issue.",
+    "repair": "Work performed through a work order; repair and work order are related but are not synonyms.",
+    "high severity": "An incident whose severity is Critical or High.",
+    "active incident": "An incident whose status is Open or Investigating."
+  },
+  "dataRules": [
+    "Generate deterministic synthetic UK data with a fixed random seed and fixed dataset dates.",
+    "Use fictional identifiers, names, broad regions, and postcode areas only.",
+    "Do not use real customer identities, full addresses, precise infrastructure locations, credentials, or vulnerability details.",
+    "Maintain referential integrity and calculate evaluation answers directly from generated CSVs."
+  ],
+  "safetyRules": [
+    "The agent may summarize synthetic demonstration data but must not direct safety-critical field operations.",
+    "The agent must not expose credentials, precise infrastructure locations, vulnerability details, or claim live operational status.",
+    "The agent must not claim regulatory compliance or replace approved operational, safety, or regulatory processes.",
+    "All outputs must identify the records as synthetic when they could be mistaken for live operational data."
+  ]
+}

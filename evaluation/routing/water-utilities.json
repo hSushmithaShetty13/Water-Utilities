@@ -1,0 +1,19 @@
+{
+  "metadata": {
+    "name": "Water Utilities Operations Routing Extension",
+    "version": "1.0",
+    "description": "Three routing questions calculated from deterministic derived marts.",
+    "total_queries": 3
+  },
+  "evaluation_queries": [
+    {
+      "id": "WURT001", "question": "Which customers are in the high impact segment?", "category": "routing_test", "expected_source": "WaterUtilitiesDemo", "expected_object": "routing_customer_service_impact", "ground_truth_answer": ["CUS0004", "CUS0008", "CUS0012", "CUS0016", "CUS0020", "CUS0024", "CUS0028", "CUS0032", "CUS0036", "CUS0040"], "answer_type": "list", "ground_truth_sql": "SELECT customer_id FROM routing_customer_service_impact WHERE service_impact_segment = 'High Impact' ORDER BY customer_id", "difficulty": "medium", "tests_routing": true, "tests_measure_selection": false
+    },
+    {
+      "id": "WURT002", "question": "Which assets need immediate review?", "category": "routing_test", "expected_source": "WaterUtilitiesDemo", "expected_object": "routing_asset_attention_scorecard", "ground_truth_answer": ["AST0002", "AST0004", "AST0006", "AST0008", "AST0010", "AST0012", "AST0016", "AST0018", "AST0020", "AST0022", "AST0024", "AST0026", "AST0028", "AST0030"], "answer_type": "list", "ground_truth_sql": "SELECT asset_id FROM routing_asset_attention_scorecard WHERE attention_band = 'Immediate Review' ORDER BY asset_id", "difficulty": "medium", "tests_routing": true, "tests_measure_selection": false
+    },
+    {
+      "id": "WURT003", "question": "Which completed repairs were late?", "category": "routing_test", "expected_source": "WaterUtilitiesDemo", "expected_object": "routing_repair_performance_mart", "ground_truth_answer": ["WO0003", "WO0006", "WO0007", "WO0014", "WO0015", "WO0022", "WO0023", "WO0034", "WO0038", "WO0039", "WO0042", "WO0046", "WO0047", "WO0050", "WO0051"], "answer_type": "list", "ground_truth_sql": "SELECT work_order_id FROM routing_repair_performance_mart WHERE performance_band = 'Completed Late' ORDER BY work_order_id", "difficulty": "medium", "tests_routing": true, "tests_measure_selection": false
+    }
+  ]
+}
