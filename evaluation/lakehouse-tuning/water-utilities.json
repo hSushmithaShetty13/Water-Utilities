@@ -1,0 +1,86 @@
+{
+  "metadata": {
+    "name": "Water Utilities Lakehouse Tuning Evaluation",
+    "version": "1.0",
+    "description": "Five held-out identifier, relationship, and latest-record questions for comparing the untuned and tuned Lakehouse source.",
+    "source_data_version": "Deterministic seed 20260902; dataset as of 2026-08-31",
+    "total_queries": 5
+  },
+  "evaluation_queries": [
+    {
+      "id": "WULH001",
+      "question": "For incident INC0017, give the incident type, status, estimated leakage, affected account holder, and asset type and region.",
+      "paraphrase": "Which customer and asset are associated with INC0017, what happened, what is its current state, and how much leakage is estimated?",
+      "category": "three_table_lookup",
+      "expected_source": "WaterUtilitiesDemo",
+      "expected_object": "base_incidents, base_customers, base_assets",
+      "ground_truth_answer": "INC0017 is a Burst Main incident with status Investigating and estimated leakage of 55.25 m3. It affects Synthetic Account 012 and a Metering Point asset in North East.",
+      "sdk_expected_answer": "INC0017 is a Burst Main incident with status Investigating and estimated leakage of 55.25 m3. It affects Synthetic Account 012 and a Metering Point asset in North East.",
+      "answer_type": "record",
+      "ground_truth_sql": "SELECT i.incident_type, i.status, i.estimated_leakage_m3, c.account_holder_name, a.asset_type, a.region AS asset_region FROM base_incidents AS i INNER JOIN base_customers AS c ON c.customer_id = i.customer_id INNER JOIN base_assets AS a ON a.asset_id = i.asset_id WHERE i.incident_id = 'INC0017'",
+      "difficulty": "hard",
+      "tests_routing": true,
+      "tests_measure_selection": false
+    },
+    {
+      "id": "WULH002",
+      "question": "For work order WO0017, give its work type, status, promised completion, crew region, linked incident type and severity, and asset ID and type.",
+      "paraphrase": "Summarize the task, progress, deadline, crew region, related incident, and affected asset for WO0017.",
+      "category": "three_table_lookup",
+      "expected_source": "WaterUtilitiesDemo",
+      "expected_object": "base_work_orders, base_incidents, base_assets",
+      "ground_truth_answer": "WO0017 is an In Progress Valve Replacement promised for 2026-03-24 16:30:00 and assigned to the Midlands crew region. It is linked to a High severity Pressure Loss incident affecting asset AST0003, a Pumping Station.",
+      "sdk_expected_answer": "WO0017 is an In Progress Valve Replacement promised for 2026-03-24 16:30:00 and assigned to the Midlands crew region. It is linked to a High severity Pressure Loss incident affecting asset AST0003, a Pumping Station.",
+      "answer_type": "record",
+      "ground_truth_sql": "SELECT w.work_type, w.status, w.promised_completion_at, w.crew_region, i.incident_type, i.severity, a.asset_id, a.asset_type FROM base_work_orders AS w INNER JOIN base_incidents AS i ON i.incident_id = w.incident_id INNER JOIN base_assets AS a ON a.asset_id = i.asset_id WHERE w.work_order_id = 'WO0017'",
+      "difficulty": "hard",
+      "tests_routing": true,
+      "tests_measure_selection": false
+    },
+    {
+      "id": "WULH003",
+      "question": "What is the latest inspection for asset AST0004? Give the inspection ID, timestamp, result, condition score, and follow-up flag.",
+      "paraphrase": "Which inspection most recently assessed AST0004, when did it occur, and what outcome and follow-up requirement were recorded?",
+      "category": "latest_record",
+      "expected_source": "WaterUtilitiesDemo",
+      "expected_object": "base_inspections",
+      "ground_truth_answer": "The latest inspection for AST0004 is INSP0063 at 2026-05-11 12:00:00. Its result is Failed, condition score is 5, and follow-up required is true.",
+      "sdk_expected_answer": "The latest inspection for AST0004 is INSP0063 at 2026-05-11 12:00:00. Its result is Failed, condition score is 5, and follow-up required is true.",
+      "answer_type": "record",
+      "ground_truth_sql": "SELECT TOP 1 inspection_id, inspected_at, result, condition_score, follow_up_required FROM base_inspections WHERE asset_id = 'AST0004' ORDER BY inspected_at DESC, inspection_id DESC",
+      "difficulty": "hard",
+      "tests_routing": true,
+      "tests_measure_selection": false
+    },
+    {
+      "id": "WULH004",
+      "question": "Show the account-holder details for customer CUS0011: name, customer type, postcode area, service status, and joined date.",
+      "paraphrase": "What kind of account is CUS0011, where is its broad postcode area, when did it join, and is its service active?",
+      "category": "raw_field_lookup",
+      "expected_source": "WaterUtilitiesDemo",
+      "expected_object": "base_customers",
+      "ground_truth_answer": "CUS0011 is Synthetic Account 011, a Household customer in postcode area B. Its service status is Closed and its joined date is 2019-06-02.",
+      "sdk_expected_answer": "CUS0011 is Synthetic Account 011, a Household customer in postcode area B. Its service status is Closed and its joined date is 2019-06-02.",
+      "answer_type": "record",
+      "ground_truth_sql": "SELECT account_holder_name, customer_type, postcode_area, service_status, joined_date FROM base_customers WHERE customer_id = 'CUS0011'",
+      "difficulty": "medium",
+      "tests_routing": true,
+      "tests_measure_selection": false
+    },
+    {
+      "id": "WULH005",
+      "question": "Describe asset AST0017 and list all its incidents with their statuses in incident ID order.",
+      "paraphrase": "For AST0017, give the asset profile and its ordered incident history, including each incident's current status.",
+      "category": "one_to_many_lookup",
+      "expected_source": "WaterUtilitiesDemo",
+      "expected_object": "base_assets, base_incidents",
+      "ground_truth_answer": "AST0017 is an Active, High criticality Pumping Station in South West, commissioned on 1999-06-24. Its incidents in ID order are INC0028 (Open), INC0032 (Open), and INC0058 (Resolved).",
+      "sdk_expected_answer": "AST0017 is an Active, High criticality Pumping Station in South West, commissioned on 1999-06-24. Its incidents in ID order are INC0028 (Open), INC0032 (Open), and INC0058 (Resolved).",
+      "answer_type": "list",
+      "ground_truth_sql": "SELECT a.asset_id, a.asset_type, a.region, a.commissioned_date, a.asset_status, a.criticality, i.incident_id, i.status AS incident_status FROM base_assets AS a LEFT JOIN base_incidents AS i ON i.asset_id = a.asset_id WHERE a.asset_id = 'AST0017' ORDER BY i.incident_id",
+      "difficulty": "hard",
+      "tests_routing": true,
+      "tests_measure_selection": false
+    }
+  ]
+}

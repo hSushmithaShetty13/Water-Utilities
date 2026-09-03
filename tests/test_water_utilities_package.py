@@ -14,6 +14,7 @@ from jsonschema import validate
 ROOT = Path(__file__).resolve().parents[1]
 BASE = ROOT / "sample-data" / "water-utilities" / "base"
 ROUTING = ROOT / "sample-data" / "water-utilities" / "derived-routing"
+LAKEHOUSE_TUNING = ROOT / "evaluation" / "lakehouse-tuning" / "water-utilities.json"
 
 EXPECTED_HEADERS = {
     "customers.csv": ["customer_id", "account_holder_name", "customer_type", "region", "postcode_area", "service_status", "joined_date"],
@@ -143,6 +144,21 @@ class WaterUtilitiesPackageTests(unittest.TestCase):
         selected = config["dataSources"][1]["selectedTables"]
         self.assertEqual(selected, [row["expected_object"] for row in routing["evaluation_queries"]])
 
+    def test_lakehouse_tuning_dataset_is_held_out_and_complete(self):
+        dataset = json.loads(LAKEHOUSE_TUNING.read_text(encoding="utf-8"))
+        queries = dataset["evaluation_queries"]
+        self.assertEqual(5, dataset["metadata"]["total_queries"])
+        self.assertEqual(5, len(queries))
+        self.assertEqual({f"WULH00{number}" for number in range(1, 6)}, {row["id"] for row in queries})
+        self.assertTrue(all(row["expected_source"] == "WaterUtilitiesDemo" for row in queries))
+        self.assertTrue(all(row.get("sdk_expected_answer") and row.get("paraphrase") for row in queries))
+        self.assertTrue(all("base_" in row["ground_truth_sql"] for row in queries))
+        serialized = json.dumps(dataset)
+        for visible_example_id in ("INC0001", "WO0001", "INSP0001"):
+            self.assertNotIn(visible_example_id, serialized)
+        for held_out_id in ("INC0017", "WO0017", "AST0004", "CUS0011", "AST0017"):
+            self.assertIn(held_out_id, serialized)
+
     def test_guides_have_valid_links_and_required_content(self):
         guide_dir = ROOT / "guides" / "water-utilities"
         user_guide = (guide_dir / "USER_GUIDE.md").read_text(encoding="utf-8")
@@ -179,7 +195,8 @@ class WaterUtilitiesPackageTests(unittest.TestCase):
             "sample-data/water-utilities/base/generate_base_data.py", "sample-data/water-utilities/derived-routing/generate_derived_routing_data.py",
             "semantic-model/optimized/water-utilities/README.md", "ontology/water-utilities/ontology-definition.json",
             "agent-configuration/routing/water-utilities/data-agent-configuration.json", "evaluation/challenge/water-utilities.json",
-            "evaluation/routing/water-utilities.json", "guides/water-utilities/USER_GUIDE.md", "guides/water-utilities/FACILITATOR_GUIDE.md",
+            "evaluation/lakehouse-tuning/water-utilities.json", "evaluation/routing/water-utilities.json",
+            "guides/water-utilities/USER_GUIDE.md", "guides/water-utilities/FACILITATOR_GUIDE.md",
         ]
         required.extend(f"sample-data/water-utilities/base/{name}" for name in EXPECTED_HEADERS)
         required.extend(f"sample-data/water-utilities/derived-routing/{name}" for name in ("customer_service_impact.csv", "asset_attention_scorecard.csv", "repair_performance_mart.csv"))

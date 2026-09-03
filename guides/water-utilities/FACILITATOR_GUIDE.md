@@ -57,14 +57,16 @@ Create saved report Card visuals bound to `[Open Incidents]`, `[Total Estimated 
 1. Add `WaterUtilitiesDemo` to the existing agent.
 2. Select only `base_customers`, `base_assets`, `base_incidents`, `base_work_orders`, and `base_inspections`.
 3. Leave the Lakehouse source description, data-source instructions, and example queries empty.
-4. Rerun WU001, WU003, and WU006 to expose overlap with `WaterUtilitiesSemanticModel`.
-5. Capture `SNAPSHOT_NAME="step3_lakehouse_added"` before tuning the source.
+4. Capture `SNAPSHOT_NAME="step3_lakehouse_added"` before tuning the source. The notebook selects five held-out Lakehouse questions plus paraphrases.
+5. Separately rerun WU001, WU003, and WU006 to expose overlap with `WaterUtilitiesSemanticModel`; treat these as routing guardrails rather than part of the Step 3/4 accuracy score.
 
-Expected: exact-row questions can use the Lakehouse, but governed KPI questions may route inconsistently while both sources expose similar entities.
+Expected: simple exact-row questions may already pass. Multi-table joins, raw fields, latest-record selection, one-to-many completeness, or paraphrases should provide room for improvement. Governed KPI questions may route inconsistently while both sources expose similar entities.
 
 ### Step 4: Tune The Lakehouse Source
 
 Apply each control in the location named below. Lakehouse tables do not have the semantic-model synonym editor; do not attempt to add Prep for AI synonyms here.
+
+Before adding instructions, confirm all five tables remain selected and that the identifier and relationship columns are available: `customer_id`, `asset_id`, `incident_id`, `work_order_id`, and `inspection_id`. A description cannot compensate for an excluded join key.
 
 #### Data Agent Instructions
 
@@ -154,6 +156,39 @@ INNER JOIN base_assets AS a ON a.asset_id = i.asset_id
 WHERE i.incident_id = 'INC0001';
 ```
 
+Add these advanced pairs to teach reusable query shapes. They deliberately use different identifiers from the held-out evaluation.
+
+**Question:** What is the latest inspection for asset AST0012?
+
+```sql
+SELECT TOP 1 inspection_id, inspected_at, result,
+	   condition_score, follow_up_required
+FROM base_inspections
+WHERE asset_id = 'AST0012'
+ORDER BY inspected_at DESC, inspection_id DESC;
+```
+
+**Question:** Show work order WO0001 with its linked incident and affected asset.
+
+```sql
+SELECT w.work_order_id, w.work_type, w.status AS work_order_status,
+	   i.incident_id, i.incident_type, i.severity,
+	   a.asset_id, a.asset_type, a.region AS asset_region
+FROM base_work_orders AS w
+INNER JOIN base_incidents AS i ON i.incident_id = w.incident_id
+INNER JOIN base_assets AS a ON a.asset_id = i.asset_id
+WHERE w.work_order_id = 'WO0001';
+```
+
+**Question:** List all incidents for asset AST0008 in incident ID order.
+
+```sql
+SELECT incident_id, incident_type, status, estimated_leakage_m3
+FROM base_incidents
+WHERE asset_id = 'AST0008'
+ORDER BY incident_id;
+```
+
 Validation checks:
 
 | Example | Expected check |
@@ -162,14 +197,45 @@ Validation checks:
 | Work-order lookup | Exactly one row: `WO0001`, linked to `INC0006`, status `In Progress`, crew region `North East`. |
 | Inspection and asset lookup | Exactly one row: `INSP0001`, linked to `AST0012`, with inspection result `Passed`. |
 | Incident relationship lookup | Exactly one row linking `INC0001` to `CUS0004` and `AST0008`. |
+| Latest-inspection pattern | Exactly one row: `INSP0061`, 3 May 2026 10:00, `Passed`, score 4, follow-up false. |
+| Work-order relationship pattern | Exactly one row linking `WO0001` to `INC0006` and `AST0013`, a Service Reservoir in South East. |
+| One-to-many incident pattern | Two ordered rows: `INC0001` Investigating at 11.25 m3, then `INC0031` Closed at 93.75 m3. |
+
+Save the source description, source instructions, table descriptions, and validated examples. Wait for the agent configuration to finish updating, then start a new conversation. Do not test in the conversation used before the changes, because prior tool and source choices can mask the effect of tuning.
 
 #### Step 4 Checkpoint
 
 1. Clear or start a new agent conversation so earlier source choices do not affect the test.
 2. Run the four example questions and confirm `WaterUtilitiesDemo` is selected and the generated SQL uses the intended base table and key predicate.
-3. Rerun WU001-WU008 and their paraphrases. Confirm they still route to `WaterUtilitiesSemanticModel` and use the governed measures in the answer key.
-4. Capture `SNAPSHOT_NAME="step4_lakehouse_tuned"` and inspect `source_trace`, `query_type`, and `generated_query` in the SDK evidence table.
-5. Diagnose any standard KPI that generates Lakehouse SQL as a routing failure, even when its numeric answer happens to be correct.
+3. Capture `SNAPSHOT_NAME="step4_lakehouse_tuned"`. The notebook reruns the same 10 held-out prompts used at Step 3, not the four examples shown above.
+4. Compare only Step 3 with Step 4. Inspect `source_trace`, `query_type`, and `generated_query`; a Step 4 answer passes the routing review only when it uses `WaterUtilitiesDemo` and the expected `base_*` tables.
+5. Separately rerun WU001-WU008 and their paraphrases. Confirm they still route to `WaterUtilitiesSemanticModel` and use the governed measures in the answer key.
+6. Diagnose any standard KPI that generates Lakehouse SQL as a routing failure, even when its numeric answer happens to be correct.
+
+#### Why Step 3 And Step 4 Previously Matched
+
+The earlier notebook ran the same eight semantic-model KPI questions at both stages. Step 4 is designed to improve Lakehouse record retrieval and SQL generation, so equal answer accuracy on those KPI questions did not mean the source tuning had no effect. It meant the evaluation did not exercise the capability being tuned.
+
+The dedicated `lakehouse-tuning` dataset fixes that mismatch. It uses different IDs from the visible SQL examples and tests five behaviors: a three-table incident lookup, a three-table work-order lookup, deterministic latest-inspection selection, a raw customer-field lookup, and a complete one-to-many asset history. Each has a paraphrase.
+
+#### Held-Out Step 3/4 Answer Key
+
+Keep these answers private until both snapshots are complete.
+
+| ID | Expected answer summary | Expected SQL objects |
+|---|---|---|
+| WULH001 | INC0017 is an Investigating Burst Main with 55.25 m3 leakage, affecting Synthetic Account 012 and a Metering Point in North East. | `base_incidents`, `base_customers`, `base_assets` |
+| WULH002 | WO0017 is an In Progress Valve Replacement promised for 24 March 2026 16:30, crew region Midlands; linked to a High Pressure Loss incident and AST0003, a Pumping Station. | `base_work_orders`, `base_incidents`, `base_assets` |
+| WULH003 | AST0004 latest inspection is INSP0063 at 11 May 2026 12:00; Failed, score 5, follow-up true. | `base_inspections` |
+| WULH004 | CUS0011 is Synthetic Account 011, Household, postcode area B, Closed, joined 2 June 2019. | `base_customers` |
+| WULH005 | AST0017 is an Active High-criticality Pumping Station in South West, commissioned 24 June 1999; incidents INC0028 Open, INC0032 Open, INC0058 Resolved. | `base_assets`, `base_incidents` |
+
+Score interpretation:
+
+- SDK answer pass: the expected facts are present and correct.
+- Routing pass: `source_trace` or the thread identifies `WaterUtilitiesDemo`.
+- SQL pass: `generated_query` uses the expected objects, exact key predicate, correct joins or ordering, and returns the complete result.
+- Treat improved answer accuracy with incorrect routing as partial improvement, not a fully tuned Step 4 result.
 
 Do not reuse the challenge `ground_truth_sql` as Lakehouse examples for aggregate questions. Those queries verify deterministic answers, while the workshop routing contract deliberately keeps governed KPIs on the semantic model.
 

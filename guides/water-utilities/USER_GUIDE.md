@@ -46,6 +46,7 @@ You will extend one Data Agent through six steps:
 - [Ontology definition](../../ontology/water-utilities/ontology-definition.json)
 - [Routing configuration](../../agent-configuration/routing/water-utilities/data-agent-configuration.json)
 - [Eight scored questions](../../evaluation/challenge/water-utilities.json)
+- [Five held-out Lakehouse tuning questions](../../evaluation/lakehouse-tuning/water-utilities.json)
 - [Three routing questions](../../evaluation/routing/water-utilities.json)
 - [Facilitator guide](FACILITATOR_GUIDE.md)
 
@@ -55,12 +56,12 @@ Use [NB_Run_SDK_Evaluation.ipynb](../../NB_Run_SDK_Evaluation.ipynb) for all mea
 | --- | --- | ---: |
 | Step 1 initial agent | `step1_baseline` | 16 challenge prompts |
 | Step 2 Prep for AI | `step2_prep_ai` | 16 challenge prompts |
-| Step 3 Lakehouse attached | `step3_lakehouse_added` | 16 challenge prompts |
-| Step 4 Lakehouse tuned | `step4_lakehouse_tuned` | 16 challenge prompts |
+| Step 3 Lakehouse attached | `step3_lakehouse_added` | 10 held-out Lakehouse prompts |
+| Step 4 Lakehouse tuned | `step4_lakehouse_tuned` | Same 10 held-out Lakehouse prompts |
 | Step 5 final standard test | `step5_final` | 16 challenge prompts |
 | Step 5 prepared routing marts | `step5_routing` | 3 routing prompts |
 
-Run all notebook cells for each snapshot. The final comparison section reads every available snapshot table, skips stages not yet run, and shows the pass-rate trend, question-by-step judgement, and formula evidence. Step 6 ontology remains a qualitative extension because it uses different relationship questions.
+Run all notebook cells for each snapshot. Compare Step 3 directly with Step 4; both use the same unseen identifier, join, raw-field, latest-record, and one-to-many questions. Compare challenge snapshots only with other challenge snapshots. The final section reads every available snapshot table, skips stages not yet run, and shows the pass rates, question-by-step judgement, and formula evidence. Step 6 ontology remains a qualitative extension because it uses different relationship questions.
 
 ## Step 1: Build The Semantic-Model Agent
 

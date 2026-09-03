@@ -51,7 +51,10 @@ class SdkEvaluationNotebookTests(unittest.TestCase):
         ):
             self.assertIn(f'"{snapshot}"', self.source)
         self.assertIn('DATASET_NAME = SNAPSHOT_PLAN[SNAPSHOT_NAME]', self.source)
-        self.assertIn('INCLUDE_PARAPHRASES = DATASET_NAME == "challenge"', self.source)
+        self.assertIn('"step3_lakehouse_added": "lakehouse-tuning"', self.source)
+        self.assertIn('"step4_lakehouse_tuned": "lakehouse-tuning"', self.source)
+        self.assertIn('INCLUDE_PARAPHRASES = DATASET_NAME != "routing"', self.source)
+        self.assertIn('if dataset_name != "routing":', self.source)
 
     def test_sdk_contract_and_complete_expected_answers(self):
         self.assertIn("fabric-data-agent-sdk==0.1.30a0", self.code[0])

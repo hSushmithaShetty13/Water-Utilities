@@ -31,7 +31,7 @@ Use [NB_Run_SDK_Evaluation.ipynb](NB_Run_SDK_Evaluation.ipynb) throughout the wo
 | Final standard evaluation | `step5_final` |
 | Prepared routing marts | `step5_routing` |
 
-The notebook automatically selects the challenge or routing dataset. It joins each SDK result to its companion run-step record and exports actual answers, judgements, generated SQL/DAX/KQL, tool traces, and thread links. Its final section compares every completed snapshot. See the [evaluation guide](evaluation/EVALUATION_GUIDE.md) for details.
+The notebook automatically selects the challenge, held-out Lakehouse-tuning, or routing dataset. Steps 3 and 4 use the same five unseen Lakehouse questions and paraphrases so source tuning has a measurable before/after result. It joins each SDK result to its companion run-step record and exports actual answers, judgements, generated SQL/DAX/KQL, tool traces, and thread links. See the [evaluation guide](evaluation/EVALUATION_GUIDE.md) for valid comparisons.
 
 ## Repository Structure
 
@@ -40,7 +40,7 @@ The notebook automatically selects the challenge or routing dataset. It joins ea
 | `config/domains/water-utilities.json` | Deployable domain profile and semantic-model source of truth |
 | `sample-data/water-utilities/` | Deterministic base and prepared routing data |
 | `agent-configuration/routing/water-utilities/` | Reference Data Agent routing configuration |
-| `evaluation/` | Challenge, routing dataset, and evaluation instructions |
+| `evaluation/` | Challenge, held-out Lakehouse tuning, routing datasets, and evaluation instructions |
 | `ontology/water-utilities/` | Optional Fabric IQ Ontology definition |
 | `semantic-model/optimized/water-utilities/` | Human-readable model reference |
 | `deployment/` | Reusable deployment implementation and notes |
