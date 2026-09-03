@@ -52,14 +52,126 @@ Checkpoint: WU001 returns `30` using `[Open Incidents]`; WU005 returns `46.43%` 
 
 Create saved report Card visuals bound to `[Open Incidents]`, `[Total Estimated Leakage]`, `[Work Completed On Time]`, and `[Assets Requiring Attention]`. Use each visual's **Add to Q&A** action and enable **Verified answer**. Do not paste raw DAX as the verified response.
 
-### Steps 3-4: Add And Tune The Lakehouse
+### Step 3: Add The Untuned Lakehouse
 
-- Add `WaterUtilitiesDemo` to the existing agent and initially expose only five `base_*` tables.
-- Expect source ambiguity before tuning.
-- Use selected objects, source descriptions, Data Agent instructions, and validated SQL examples for Lakehouse sources.
-- Do not tell participants to add synonyms to Lakehouse tables; that control belongs to Prep for AI on Power BI semantic models.
-- Teach exact `INC0001`, `WO0001`, and `INSP0001` lookups from the participant guide.
-- Keep standard KPI questions on `WaterUtilitiesSemanticModel`.
+1. Add `WaterUtilitiesDemo` to the existing agent.
+2. Select only `base_customers`, `base_assets`, `base_incidents`, `base_work_orders`, and `base_inspections`.
+3. Leave the Lakehouse source description, data-source instructions, and example queries empty.
+4. Rerun WU001, WU003, and WU006 to expose overlap with `WaterUtilitiesSemanticModel`.
+5. Capture `SNAPSHOT_NAME="step3_lakehouse_added"` before tuning the source.
+
+Expected: exact-row questions can use the Lakehouse, but governed KPI questions may route inconsistently while both sources expose similar entities.
+
+### Step 4: Tune The Lakehouse Source
+
+Apply each control in the location named below. Lakehouse tables do not have the semantic-model synonym editor; do not attempt to add Prep for AI synonyms here.
+
+#### Data Agent Instructions
+
+Add this to the agent-level instructions. Preserve the Step 2 business definitions and safety rules.
+
+```text
+Route standard counts, totals, percentages, averages, rankings, and business-rule questions to WaterUtilitiesSemanticModel and use its explicit governed measures. This includes active incidents, leakage, repair duration, repeat incidents, on-time completion, assets requiring attention, and region-level KPI analysis.
+
+Use WaterUtilitiesDemo base tables only for detailed record retrieval by an exact customer, asset, incident, work-order, or inspection identifier, or when the requested raw field is not exposed by WaterUtilitiesSemanticModel. Prefer one source when it can answer the complete question. Do not recompute a governed KPI in SQL merely because similar base columns are available.
+
+When SQL is required, select only relevant columns, use exact key joins, qualify ambiguous column names, and apply an ORDER BY for multi-row results. State units for leakage and durations. All records are synthetic; do not imply live operational status, disclose precise infrastructure locations, direct field work, or claim regulatory compliance.
+```
+
+#### Lakehouse Source Description
+
+Set the description for `WaterUtilitiesDemo` to:
+
+```text
+Detailed synthetic Water Utilities records for exact customer, asset, incident, work-order, and inspection lookup. The five base tables contain row-level attributes and relationship keys. Use this source for identifier-led detail questions and raw fields not exposed by WaterUtilitiesSemanticModel. It is not the authoritative source for governed KPI calculations.
+```
+
+#### Lakehouse Data-Source Instructions
+
+Set the instructions on the `WaterUtilitiesDemo` source to:
+
+```text
+Use base_customers for customer/account-holder details and join it to base_incidents on customer_id. Use base_assets for asset attributes and join it to base_incidents or base_inspections on asset_id. Use base_incidents for incident details; active means status is Open or Investigating. Use base_work_orders for work-order details and join it to base_incidents on incident_id. Use base_inspections for inspection details and join it to base_assets on asset_id.
+
+Use exact equality for identifiers such as CUS0001, AST0001, INC0001, WO0001, and INSP0001. Return only requested fields and preserve the stored values. Do not infer a missing relationship, use customer region as asset region, or treat priority as field direction. Route aggregate business metrics back to WaterUtilitiesSemanticModel.
+```
+
+#### Selected-Table Descriptions
+
+Use these descriptions to make table grain and relationship keys explicit:
+
+| Table | Description |
+|---|---|
+| `base_customers` | One row per fictional water service account holder, keyed by `customer_id`; contains account label, customer type, broad customer region, postcode area, service status, and joined date. |
+| `base_assets` | One row per fictional maintainable water asset, keyed by `asset_id`; contains asset type, broad asset region, commissioned date, status, and analytical criticality. |
+| `base_incidents` | One row per fictional incident, keyed by `incident_id`; links to one asset through `asset_id` and optionally one customer through `customer_id`; contains type, severity, status, timestamps, leakage, interruption hours, and repeat flag. |
+| `base_work_orders` | One row per fictional work order, keyed by `work_order_id`; links to its incident through `incident_id`; contains work type, priority, status, lifecycle timestamps, and broad crew region. |
+| `base_inspections` | One row per fictional inspection, keyed by `inspection_id`; links to its asset through `asset_id`; contains inspection type, timestamp, result, condition score, and follow-up flag. |
+
+#### Validated SQL Example Queries
+
+Add each question/query pair to the Lakehouse source and use the UI's **Validate** action before saving. These examples use Fabric SQL endpoint table and column names.
+
+**Question:** Find incident INC0001 and show its available details.
+
+```sql
+SELECT incident_id, asset_id, customer_id, incident_type, severity, status,
+	   opened_at, resolved_at, estimated_leakage_m3,
+	   service_interruption_hours, repeat_incident_flag
+FROM base_incidents
+WHERE incident_id = 'INC0001';
+```
+
+**Question:** Show the detailed work order record for WO0001.
+
+```sql
+SELECT work_order_id, incident_id, work_type, priority, status, raised_at,
+	   work_started_at, promised_completion_at, work_completed_at, crew_region
+FROM base_work_orders
+WHERE work_order_id = 'WO0001';
+```
+
+**Question:** Find inspection INSP0001 and include the inspected asset type and region.
+
+```sql
+SELECT i.inspection_id, i.asset_id, a.asset_type, a.region AS asset_region,
+	   i.inspection_type, i.inspected_at, i.result, i.condition_score,
+	   i.follow_up_required
+FROM base_inspections AS i
+INNER JOIN base_assets AS a ON a.asset_id = i.asset_id
+WHERE i.inspection_id = 'INSP0001';
+```
+
+**Question:** Show the customer and asset linked to incident INC0001.
+
+```sql
+SELECT i.incident_id, i.incident_type, i.status,
+	   c.customer_id, c.account_holder_name,
+	   a.asset_id, a.asset_type, a.region AS asset_region
+FROM base_incidents AS i
+LEFT JOIN base_customers AS c ON c.customer_id = i.customer_id
+INNER JOIN base_assets AS a ON a.asset_id = i.asset_id
+WHERE i.incident_id = 'INC0001';
+```
+
+Validation checks:
+
+| Example | Expected check |
+|---|---|
+| Incident lookup | Exactly one row: `INC0001`, `AST0008`, `CUS0004`, `Burst Main`, `Critical`, `Investigating`, 11.25 m3. |
+| Work-order lookup | Exactly one row: `WO0001`, linked to `INC0006`, status `In Progress`, crew region `North East`. |
+| Inspection and asset lookup | Exactly one row: `INSP0001`, linked to `AST0012`, with inspection result `Passed`. |
+| Incident relationship lookup | Exactly one row linking `INC0001` to `CUS0004` and `AST0008`. |
+
+#### Step 4 Checkpoint
+
+1. Clear or start a new agent conversation so earlier source choices do not affect the test.
+2. Run the four example questions and confirm `WaterUtilitiesDemo` is selected and the generated SQL uses the intended base table and key predicate.
+3. Rerun WU001-WU008 and their paraphrases. Confirm they still route to `WaterUtilitiesSemanticModel` and use the governed measures in the answer key.
+4. Capture `SNAPSHOT_NAME="step4_lakehouse_tuned"` and inspect `source_trace`, `query_type`, and `generated_query` in the SDK evidence table.
+5. Diagnose any standard KPI that generates Lakehouse SQL as a routing failure, even when its numeric answer happens to be correct.
+
+Do not reuse the challenge `ground_truth_sql` as Lakehouse examples for aggregate questions. Those queries verify deterministic answers, while the workshop routing contract deliberately keeps governed KPIs on the semantic model.
 
 ### Step 5: Prepared Tables And Multi-Source Routing
 

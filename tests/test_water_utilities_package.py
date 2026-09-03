@@ -151,6 +151,18 @@ class WaterUtilitiesPackageTests(unittest.TestCase):
             self.assertIn(f"## Step {step}", user_guide)
         for required in ("## Complete Answer Key", "## Escalating Hints", "## Controls By Source Type", "## Debrief Prompts"):
             self.assertIn(required, facilitator_guide)
+        for required in (
+            "### Step 4: Tune The Lakehouse Source",
+            "#### Data Agent Instructions",
+            "#### Lakehouse Source Description",
+            "#### Lakehouse Data-Source Instructions",
+            "#### Selected-Table Descriptions",
+            "#### Validated SQL Example Queries",
+            "#### Step 4 Checkpoint",
+        ):
+            self.assertIn(required, facilitator_guide)
+        for table in ("base_customers", "base_assets", "base_incidents", "base_work_orders", "base_inspections"):
+            self.assertIn(table, facilitator_guide)
         for identifier in ("INC0001", "WO0001", "INSP0001"):
             self.assertIn(identifier, user_guide)
         for guide_path in guide_dir.glob("*.md"):
