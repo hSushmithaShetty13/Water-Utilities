@@ -195,6 +195,13 @@ class WaterUtilitiesPackageTests(unittest.TestCase):
             "#### Step 5 Validated SQL Examples",
             "#### Step 5 Save And Test Sequence",
             "#### Step 5 Routing Checkpoint",
+            "#### Step 5 Final Accuracy Refinement",
+            "##### Final Semantic-Model Prep For AI Instructions",
+            "##### Final Data Agent Instructions",
+            "##### Measure Descriptions To Verify",
+            "##### Expected DAX Shapes For Hard Questions",
+            "##### Verified Answer Coverage",
+            "##### Final Retest Sequence",
         ):
             self.assertIn(required, facilitator_guide)
         for table in ("base_customers", "base_assets", "base_incidents", "base_work_orders", "base_inspections"):

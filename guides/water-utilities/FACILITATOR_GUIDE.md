@@ -372,6 +372,143 @@ For each routing question, require all three conditions:
 - Routing pass: the trace or thread identifies `WaterUtilitiesDemo` and the expected mart.
 - SQL pass: the query uses the exact classification value and orders by the correct identifier without row limiting.
 
+#### Step 5 Final Accuracy Refinement
+
+`step5_routing` and `step5_final` test different sources. A 3/3 routing result confirms the prepared marts are configured correctly; it does not improve the 16 semantic-model prompts automatically. If `step5_final` remains near 60%, refine `WaterUtilitiesSemanticModel`, Prep for AI, Verified Answers, and the agent instructions below. Do not add the challenge SQL as Lakehouse examples, because that would route governed KPI questions to the wrong source.
+
+First use the all-step evidence table to identify whether each failure is the original question, its paraphrase, or both. Inspect `source_trace`, `query_type`, `generated_query`, and `actual_answer` before changing a control.
+
+##### Final Semantic-Model Prep For AI Instructions
+
+Replace or extend the semantic model's AI instructions with this copy-ready block:
+
+```text
+This model is the authoritative source for all standard Water Utilities KPIs. Always use the named explicit measure instead of recreating its logic from columns.
+
+Question-to-measure rules:
+- Open incidents, active incidents, open events, and events being investigated use [Open Incidents]. Active means Incident Status is Open or Investigating.
+- Estimated leakage for active, open, or investigating incidents uses [Total Estimated Leakage]. Return cubic metres and do not sum all incident statuses.
+- Average repair duration for completed work orders or completed repairs uses [Average Repair Duration]. Return hours and do not include Planned or In Progress work orders.
+- Repeat incidents and incidents following another incident on the same asset within 30 days use [Repeat Incidents].
+- Percentage or share of completed work orders completed on time uses [Work Completed On Time]. The denominator is completed work orders only; on time means Work Completed At is on or before Promised Completion At.
+- Assets requiring attention use [Assets Requiring Attention]. Do not approximate this with asset criticality. The measure counts active assets having an Open or Investigating Critical/High incident or a Failed latest inspection.
+- For the region with the highest active estimated leakage, group [Total Estimated Leakage] by Assets[Asset Region], sort the measure descending, and return the first region and its value.
+- For on-time completion of work orders linked to service interruption incidents, filter Incidents[Incident Type] to Service Interruption and then evaluate [Work Completed On Time]. Keep the completed-work-order denominator inside that incident filter.
+
+Terminology rules:
+- Customer and account holder are equivalent terms.
+- Incident, event, and issue are equivalent terms.
+- Repair can refer to a work order in performance questions, but repair and work order are related concepts rather than global synonyms.
+- Finished means Work Order Status is Completed. Promised timestamp means Promised Completion At.
+- Leakage volume is measured in m3. Repair duration and service interruption are measured in hours.
+
+Answer rules:
+- Return the requested number, percentage, region, and unit directly.
+- For percentages, include the percentage and numerator/denominator when available.
+- Do not substitute a raw column aggregation when an explicit measure exists.
+- Do not use WaterUtilitiesDemo for these governed KPI questions.
+```
+
+##### Final Data Agent Instructions
+
+Add this after the Step 5 routing rules in the agent-level instructions:
+
+```text
+For the standard evaluation questions and their paraphrases, always route to WaterUtilitiesSemanticModel.
+
+Use these exact measure mappings: open or active incident count -> [Open Incidents]; active estimated leakage -> [Total Estimated Leakage]; completed repair duration -> [Average Repair Duration]; repeat incident count -> [Repeat Incidents]; completed-on-time percentage -> [Work Completed On Time]; asset attention count -> [Assets Requiring Attention].
+
+When a question adds a dimension or filter, keep the governed measure and apply model context rather than rebuilding the measure. For highest-leakage region, evaluate [Total Estimated Leakage] by Assets[Asset Region] and return the top region and value. For service-interruption repair performance, filter Incidents[Incident Type] to Service Interruption and evaluate [Work Completed On Time].
+
+Treat the following paraphrases identically to their original concepts: events open or being investigated = active incidents; finished repairs = completed work orders; met the promised timestamp = completed on time; issues = incidents; most leakage = highest [Total Estimated Leakage]. State the unit and important filter in the answer.
+```
+
+##### Measure Descriptions To Verify
+
+Confirm these descriptions are present and exposed in the AI Data Schema. Tight descriptions help measure selection more reliably than repeating the full DAX in agent instructions.
+
+| Measure | Recommended description |
+|---|---|
+| `[Open Incidents]` | Count of incidents whose status is Open or Investigating; use for open events, active incidents, and issues being investigated. |
+| `[Total Estimated Leakage]` | Sum of estimated leakage volume in m3 for Open or Investigating incidents; supports filtering and grouping by related asset attributes such as Asset Region. |
+| `[Average Repair Duration]` | Average elapsed hours from Work Started At to Work Completed At for Completed work orders only. |
+| `[Repeat Incidents]` | Count of incidents marked as having an earlier incident on the same asset within the prior 30 days. |
+| `[Work Completed On Time]` | Percentage of Completed work orders finished on or before Promised Completion At; respects filters from related Incidents, including Incident Type. |
+| `[Assets Requiring Attention]` | Count of Active assets with an Open/Investigating Critical/High incident or a Failed latest inspection; do not substitute asset criticality. |
+
+##### Expected DAX Shapes For Hard Questions
+
+Power BI semantic-model sources do not accept validated SQL question/query pairs. Use the generated DAX evidence to verify that the model preserved the governed measure. Equivalent DAX can vary, but these are the expected logical shapes.
+
+Highest active leakage region:
+
+```dax
+EVALUATE
+TOPN(
+	1,
+	SUMMARIZECOLUMNS(
+		Assets[Asset Region],
+		"Total Estimated Leakage", [Total Estimated Leakage]
+	),
+	[Total Estimated Leakage], DESC,
+	Assets[Asset Region], ASC
+)
+```
+
+On-time percentage for service-interruption work orders:
+
+```dax
+EVALUATE
+ROW(
+	"Work Completed On Time",
+	CALCULATE(
+		[Work Completed On Time],
+		Incidents[Incident Type] = "Service Interruption"
+	)
+)
+```
+
+Reject generated logic that sums leakage without the measure's active-status filter, averages all work orders, divides by all work orders, counts asset criticality, or evaluates service interruption without filtering the related Incidents table.
+
+##### Verified Answer Coverage
+
+For the most reliable workshop result, create and verify saved report visuals for the governed questions. Verified Answers must be grounded in visuals; do not paste static text or raw DAX as an answer.
+
+| Questions | Saved visual recipe |
+|---|---|
+| WU001 and paraphrase | Card using `[Open Incidents]`. |
+| WU002 and paraphrase | Card using `[Total Estimated Leakage]`. |
+| WU003 and paraphrase | Card using `[Average Repair Duration]`. |
+| WU004 and paraphrase | Card using `[Repeat Incidents]`. |
+| WU005 and paraphrase | Card using `[Work Completed On Time]`; show percentage formatting. |
+| WU006 and paraphrase | Card using `[Assets Requiring Attention]`. |
+| WU007 and paraphrase | Table or bar chart with `Assets[Asset Region]` and `[Total Estimated Leakage]`, sorted descending; apply a visual Top N 1 filter by `[Total Estimated Leakage]`. |
+| WU008 and paraphrase | Card using `[Work Completed On Time]` with visual filter `Incidents[Incident Type] = Service Interruption`. |
+
+For each saved visual, use **Add to Q&A**, enable **Verified answer**, and add both the original wording and its paraphrase if the interface supports alternate phrasings. Refresh the semantic model and wait for the Data Agent configuration to update before retesting in a new conversation.
+
+##### Final Retest Sequence
+
+1. Confirm the six governed measures and all relationship columns are included in the AI Data Schema.
+2. Apply the semantic-model and Data Agent instruction blocks above.
+3. Add Verified Answers, prioritizing the exact failed question IDs from the evidence table. For a 10/16 result, check paraphrase failures before creating unnecessary new measures.
+4. Save and refresh the semantic model, then wait for the Data Agent update to complete.
+5. Start a new conversation and test each previously failed original/paraphrase pair once.
+6. Verify that standard questions use `WaterUtilitiesSemanticModel`; correct numbers produced by routing-mart SQL are still routing failures.
+7. Rerun `SNAPSHOT_NAME="step5_final"`. The notebook uses the latest evaluation ID, so rerunning replaces the displayed Step 5 final comparison without deleting earlier Delta rows.
+
+If a hard filtered question still fails after these controls, add a dedicated governed measure rather than instructing the agent to reconstruct business logic. For WU008, the optional measure is:
+
+```dax
+Service Interruption Work Completed On Time =
+CALCULATE(
+	[Work Completed On Time],
+	Incidents[Incident Type] = "Service Interruption"
+)
+```
+
+Describe it as: "Percentage of Completed work orders linked to Service Interruption incidents that finished on or before Promised Completion At." Add it to the AI Data Schema and bind the WU008 Verified Answer card to it. This is a targeted fallback; do not add duplicate measures unless evidence shows the existing filtered measure is not selected correctly.
+
 ## Complete Answer Key
 
 Every value below was calculated from the checked-in generated CSVs.
