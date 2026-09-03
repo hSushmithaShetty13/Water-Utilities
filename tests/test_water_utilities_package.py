@@ -121,6 +121,7 @@ class WaterUtilitiesPackageTests(unittest.TestCase):
         }
         challenge = json.loads((ROOT / "evaluation" / "challenge" / "water-utilities.json").read_text(encoding="utf-8"))
         self.assertEqual(8, challenge["metadata"]["total_queries"])
+        self.assertTrue(all(row.get("sdk_expected_answer") for row in challenge["evaluation_queries"]))
         self.assertEqual(calculated, {row["id"]: row["ground_truth_answer"] for row in challenge["evaluation_queries"]})
         self.assertEqual(attention_assets, challenge["evaluation_queries"][5]["ground_truth_detail"])
         self.assertEqual("North East", top_region)
@@ -136,6 +137,7 @@ class WaterUtilitiesPackageTests(unittest.TestCase):
             "WURT003": [row["work_order_id"] for row in read_csv(ROUTING / "repair_performance_mart.csv") if row["performance_band"] == "Completed Late"],
         }
         self.assertEqual(3, routing["metadata"]["total_queries"])
+        self.assertTrue(all(row.get("sdk_expected_answer") for row in routing["evaluation_queries"]))
         self.assertEqual(calculated, {row["id"]: row["ground_truth_answer"] for row in routing["evaluation_queries"]})
         config = json.loads((ROOT / "agent-configuration" / "routing" / "water-utilities" / "data-agent-configuration.json").read_text(encoding="utf-8"))["dataAgentConfiguration"]
         selected = config["dataSources"][1]["selectedTables"]

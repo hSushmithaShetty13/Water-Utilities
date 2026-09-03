@@ -4,5 +4,6 @@ __pycache__/
 .pytest_cache/
 *.csv.tmp
 *_sdk_evaluation_results.json
-*_data_agent_evaluation_report.json
-*_data_agent_evaluation_scorecard.csv
+*_sdk_evaluation_results_evidence.csv
+*_all_steps_evidence.csv
+*_all_steps_judgement_matrix.csv

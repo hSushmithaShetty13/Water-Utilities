@@ -49,7 +49,18 @@ You will extend one Data Agent through six steps:
 - [Three routing questions](../../evaluation/routing/water-utilities.json)
 - [Facilitator guide](FACILITATOR_GUIDE.md)
 
-Use [NB_Run_SDK_Evaluation.ipynb](../../NB_Run_SDK_Evaluation.ipynb) for a live agent test. Use [NB_Review_And_Score_Data_Agent.ipynb](../../NB_Review_And_Score_Data_Agent.ipynb) for the reviewed scorecard. The scorecard reviews captured evidence; it does not test the live agent by itself.
+Use [NB_Run_SDK_Evaluation.ipynb](../../NB_Run_SDK_Evaluation.ipynb) for all measured runs. Change only `SNAPSHOT_NAME` after each stage; the notebook chooses the correct dataset and retains answer, judgement, generated SQL/DAX/KQL, tool trace, and thread evidence.
+
+| After stage | `SNAPSHOT_NAME` | Prompts |
+| --- | --- | ---: |
+| Step 1 initial agent | `step1_baseline` | 16 challenge prompts |
+| Step 2 Prep for AI | `step2_prep_ai` | 16 challenge prompts |
+| Step 3 Lakehouse attached | `step3_lakehouse_added` | 16 challenge prompts |
+| Step 4 Lakehouse tuned | `step4_lakehouse_tuned` | 16 challenge prompts |
+| Step 5 final standard test | `step5_final` | 16 challenge prompts |
+| Step 5 prepared routing marts | `step5_routing` | 3 routing prompts |
+
+Run all notebook cells for each snapshot. The final comparison section reads every available snapshot table, skips stages not yet run, and shows the pass-rate trend, question-by-step judgement, and formula evidence. Step 6 ontology remains a qualitative extension because it uses different relationship questions.
 
 ## Step 1: Build The Semantic-Model Agent
 
@@ -181,17 +192,14 @@ Explore cross-entity relationships without treating analytics as operational dir
 
 Expected: the ontology improves entity traversal. It does not authorize repairs, assess live risk, or prove compliance.
 
-## Results Worksheet
+## Reading The Evaluation Tables
 
-| ID | Baseline | Hypothesis | One control changed | Retest | Paraphrase | Source/measure evidence |
-|---|---|---|---|---|---|---|
-| WU001 | | | | | | |
-| WU002 | | | | | | |
-| WU003 | | | | | | |
-| WU004 | | | | | | |
-| WU005 | | | | | | |
-| WU006 | | | | | | |
-| WU007 | | | | | | |
-| WU008 | | | | | | |
+- `expected_source` and `expected_measure_or_object` describe the intended route from the checked-in dataset.
+- `actual_answer` and `evaluation_judgement` come from the official SDK evaluation result.
+- `query_type` and `generated_query` normalize SQL, DAX, or KQL extracted by the SDK from the run steps.
+- `source_trace` retains function names and function queries. It is evidence, not a guaranteed selected-source field.
+- `thread_url` opens the supporting Fabric conversation when the SDK provides one.
+
+Use the all-step evidence CSV for detailed review and the judgement-matrix CSV for a compact progression view.
 
 Do not use this synthetic package for operational decisions, customer contact, infrastructure security assessment, safety-critical work, or regulatory reporting.

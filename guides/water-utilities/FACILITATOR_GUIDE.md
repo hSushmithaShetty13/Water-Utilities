@@ -6,9 +6,10 @@ Keep this guide private until teams have captured their baseline and diagnoses.
 
 1. Give participants [USER_GUIDE.md](USER_GUIDE.md) and ask them to change one control at a time.
 2. Use [NB_Deploy_Data_Agent_Hackathon.ipynb](../../NB_Deploy_Data_Agent_Hackathon.ipynb) to create or reset local workshop artifacts with `DOMAIN_PROFILE="water-utilities"`.
-3. Use [NB_Run_SDK_Evaluation.ipynb](../../NB_Run_SDK_Evaluation.ipynb) for baseline and final live-agent runs.
-4. Use [NB_Review_And_Score_Data_Agent.ipynb](../../NB_Review_And_Score_Data_Agent.ipynb) to review source/query evidence and score results.
-5. Remind participants that every record is synthetic and no output directs field operations or establishes compliance.
+3. Use [NB_Run_SDK_Evaluation.ipynb](../../NB_Run_SDK_Evaluation.ipynb) after Steps 1-5. Participants change only `SNAPSHOT_NAME`.
+4. Review the notebook's all-step evidence table for actual answers, SDK judgements, generated SQL/DAX/KQL, source traces, and thread links.
+5. Treat Step 6 ontology questions as a qualitative extension rather than mixing them into the standard challenge score.
+6. Remind participants that every record is synthetic and no output directs field operations or establishes compliance.
 
 ## Setup Checklist
 
@@ -24,7 +25,7 @@ Keep this guide private until teams have captured their baseline and diagnoses.
 
 - Source: `WaterUtilitiesSemanticModel` only.
 - Prep for AI, synonyms, Verified Answers, and Data Agent instructions are empty.
-- Capture all eight questions and paraphrases with `SNAPSHOT_NAME="baseline"`.
+- Capture all eight questions and paraphrases with `SNAPSHOT_NAME="step1_baseline"`.
 - Do not reveal answers before teams record their own evidence.
 
 ### Step 2: Prep For AI And Agent Instructions

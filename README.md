@@ -20,12 +20,18 @@ Follow the [participant guide](guides/water-utilities/USER_GUIDE.md). The three-
 
 The challenge contains eight scored questions and their paraphrases. Two additional hard questions require regional ranking and a filtered cross-entity performance calculation.
 
-1. Run [NB_Run_SDK_Evaluation.ipynb](NB_Run_SDK_Evaluation.ipynb) before tuning with `SNAPSHOT_NAME="baseline"`.
-2. Run it again after tuning with `SNAPSHOT_NAME="final"`.
-3. Complete [NB_Review_And_Score_Data_Agent.ipynb](NB_Review_And_Score_Data_Agent.ipynb) using the captured evidence.
-4. Use the [evaluation guide](evaluation/EVALUATION_GUIDE.md) for scoring and troubleshooting.
+Use [NB_Run_SDK_Evaluation.ipynb](NB_Run_SDK_Evaluation.ipynb) throughout the workshop. Change only `SNAPSHOT_NAME` and run all cells after each stage:
 
-The reviewed scorecard is worth 32 points for the baseline and 32 points for the final snapshot. The optional three-question routing dataset is evaluated separately.
+| Stage | Snapshot |
+| --- | --- |
+| Initial semantic-model agent | `step1_baseline` |
+| Prep for AI configured | `step2_prep_ai` |
+| Lakehouse attached | `step3_lakehouse_added` |
+| Lakehouse source tuned | `step4_lakehouse_tuned` |
+| Final standard evaluation | `step5_final` |
+| Prepared routing marts | `step5_routing` |
+
+The notebook automatically selects the challenge or routing dataset. It joins each SDK result to its companion run-step record and exports actual answers, judgements, generated SQL/DAX/KQL, tool traces, and thread links. Its final section compares every completed snapshot. See the [evaluation guide](evaluation/EVALUATION_GUIDE.md) for details.
 
 ## Repository Structure
 
