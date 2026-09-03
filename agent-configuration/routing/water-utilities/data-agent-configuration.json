@@ -15,7 +15,8 @@
         "name": "WaterUtilitiesDemo", "type": "lakehouse",
         "selectedTables": ["routing_customer_service_impact", "routing_asset_attention_scorecard", "routing_repair_performance_mart"],
         "excludedTables": ["base_customers", "base_assets", "base_incidents", "base_work_orders", "base_inspections"],
-        "description": "Use only for customer service-impact segments, asset attention bands, or repair performance bands.",
+        "description": "Prepared synthetic classification marts for customer service impact, asset attention, and repair performance. Use only when a question explicitly asks for a segment, attention band, or performance band; standard governed KPIs remain authoritative in WaterUtilitiesSemanticModel.",
+        "instructions": "Use routing_customer_service_impact only for customer service-impact classifications, routing_asset_attention_scorecard only for asset attention classifications, and routing_repair_performance_mart only for work-order performance classifications. Filter the named classification column using exact stored values. Return complete identifier lists in ascending order without TOP, LIMIT, sampling, or aggregation. Do not join the marts for the standard classification questions and do not calculate standard semantic-model KPIs from this source.",
         "routingTopics": ["customer impact segmentation", "combined latest inspection and high-severity incident attention bands", "repair completion performance bands"],
         "exampleQueries": [
           {"question": "Which customers are in the high impact segment?", "query": "SELECT customer_id, account_holder_name, active_incidents, service_interruption_hours FROM routing_customer_service_impact WHERE service_impact_segment = 'High Impact' ORDER BY customer_id"},
@@ -24,7 +25,7 @@
         ]
       }
     ],
-    "agentInstructions": "Use WaterUtilitiesSemanticModel for standard governed measures. Use WaterUtilitiesDemo only for the three prepared routing classifications. Prefer one source. The data is synthetic: do not imply live status, reveal sensitive infrastructure details, direct field operations, or claim regulatory compliance.",
+    "agentInstructions": "Use WaterUtilitiesSemanticModel for standard governed counts, totals, averages, percentages, rankings, and business-rule measures. Use WaterUtilitiesDemo only for customer service-impact segments, asset attention bands, and repair performance bands. Map High Impact to service_impact_segment = 'High Impact', Immediate Review to attention_band = 'Immediate Review', and late completed repairs to performance_band = 'Completed Late'. Prefer one source. Return complete classification lists once each in ascending identifier order. The data is synthetic: do not imply live status, reveal sensitive infrastructure details, direct field operations, or claim regulatory compliance.",
     "routingScenarios": [
       {"question": "How many open incidents do we have?", "expectedSource": "WaterUtilitiesSemanticModel", "expectedObject": "Open Incidents"},
       {"question": "What percentage of completed work was on time?", "expectedSource": "WaterUtilitiesSemanticModel", "expectedObject": "Work Completed On Time"},

@@ -241,17 +241,122 @@ Do not reuse the challenge `ground_truth_sql` as Lakehouse examples for aggregat
 
 ### Step 5: Prepared Tables And Multi-Source Routing
 
-Deselect the five base tables and select only:
+Step 5 changes the Lakehouse from detailed base records to three prepared classification marts. Complete the object selection first; leaving a `base_*` table selected creates unnecessary overlap and can reduce routing accuracy.
+
+#### Selected Objects
+
+Deselect all five `base_*` tables and select only:
 
 - `routing_customer_service_impact` for service-impact segments.
 - `routing_asset_attention_scorecard` for latest-inspection and incident attention bands.
 - `routing_repair_performance_mart` for repair performance bands.
 
-Use this routing rule:
+Confirm that no other Lakehouse table is selected before saving.
+
+#### Step 5 Data Agent Instructions
+
+Replace the Step 4 base-table routing text with the following agent-level instructions. Retain the semantic-model business definitions and safety rules from Step 2.
 
 ```text
-Prefer WaterUtilitiesSemanticModel for standard governed metrics. Use WaterUtilitiesDemo only for service-impact segments, asset attention bands, and repair performance bands. Prefer one source and do not combine sources when one selected source answers the question.
+The agent has two complementary sources. Route by intent and use exactly one source whenever it can answer the complete question.
+
+Use WaterUtilitiesSemanticModel for standard governed counts, totals, averages, percentages, rankings, and business-rule metrics. This includes open or active incidents, active estimated leakage, average repair duration, repeat incidents, completed-on-time percentage, assets requiring attention, affected customers, service interruption hours, and region-level KPI analysis. Prefer its explicit measures and do not recreate these metrics in SQL.
+
+Use WaterUtilitiesDemo only when the question asks for one of these prepared row-level classifications:
+1. Customer service-impact segment, including High Impact, Moderate Impact, or No Recorded Impact: use routing_customer_service_impact.
+2. Asset attention band, including Immediate Review, Inspection Follow-up, or Routine Monitoring: use routing_asset_attention_scorecard.
+3. Repair performance band, including Completed Late, Completed On Time, Open Priority Repair, or Open Routine Repair: use routing_repair_performance_mart.
+
+Map "high impact customers" and "customers in the high impact segment" to service_impact_segment = 'High Impact'. Map "assets needing immediate review" to attention_band = 'Immediate Review'. Map "late completed repairs" and "completed repairs that were late" to performance_band = 'Completed Late'. Do not substitute a similar boolean or recompute the classification from another source.
+
+For list questions, return every matching identifier exactly once in ascending identifier order. Do not return only a sample, top rows, or a count unless the user asks for one. Include concise supporting fields only when requested. State that the data is synthetic when confusion with live operations is possible. Never direct field operations, reveal precise infrastructure locations, or claim regulatory compliance.
 ```
+
+#### Step 5 Lakehouse Source Description
+
+Set the `WaterUtilitiesDemo` source description to:
+
+```text
+Prepared synthetic Water Utilities classification marts for customer service impact, asset attention, and repair performance. Each table contains one precomputed business classification column and supporting fields. Use this source only for questions that explicitly ask for a segment, attention band, or performance band. Standard governed KPIs remain authoritative in WaterUtilitiesSemanticModel.
+```
+
+#### Step 5 Lakehouse Data-Source Instructions
+
+Set the instructions on `WaterUtilitiesDemo` to:
+
+```text
+Use routing_customer_service_impact only for customer service-impact classifications. One row represents one customer. Filter service_impact_segment using the exact stored values 'High Impact', 'Moderate Impact', or 'No Recorded Impact'. High Impact means the prepared row has at least one active incident or at least 10 total service-interruption hours.
+
+Use routing_asset_attention_scorecard only for asset attention classifications. One row represents one asset. Filter attention_band using the exact stored values 'Immediate Review', 'Inspection Follow-up', or 'Routine Monitoring'. Immediate Review means an active asset has at least one active Critical or High incident. Inspection Follow-up means the active asset requires attention because its latest inspection failed but it has no active high-severity incident.
+
+Use routing_repair_performance_mart only for work-order performance classifications. One row represents one work order. Filter performance_band using the exact stored values 'Completed Late', 'Completed On Time', 'Open Priority Repair', or 'Open Routine Repair'. Completed Late means the work order is Completed and its completion timestamp is later than its promised timestamp.
+
+Select identifiers and only the supporting columns needed by the question. For complete lists, do not use TOP, LIMIT, sampling, or aggregation. Always ORDER BY the entity identifier. Do not join the three marts to answer the three standard classification questions. Do not use this source to calculate standard semantic-model KPIs.
+```
+
+#### Step 5 Table Descriptions
+
+| Table | Description |
+|---|---|
+| `routing_customer_service_impact` | One row per customer, keyed by `customer_id`. Contains account-holder label, region, incident counts, total interruption hours, and the prepared `service_impact_segment`. Use only for customer impact-segment questions. |
+| `routing_asset_attention_scorecard` | One row per asset, keyed by `asset_id`. Contains asset attributes, active high-severity incident count, latest inspection details, `requires_attention`, and the prepared `attention_band`. Use the band, not the boolean, when a question names a classification such as Immediate Review. |
+| `routing_repair_performance_mart` | One row per work order, keyed by `work_order_id`. Contains incident and asset keys, incident severity, work-order status, repair duration, on-time flag, and the prepared `performance_band`. Use only for repair performance-band questions. |
+
+#### Step 5 Validated SQL Examples
+
+Add all three question/query pairs to the Lakehouse source and use the UI's **Validate** action. Keep the question wording aligned with the intended classification phrase.
+
+**Question:** Which customers are in the high impact segment?
+
+```sql
+SELECT customer_id, account_holder_name, active_incidents,
+	   service_interruption_hours
+FROM routing_customer_service_impact
+WHERE service_impact_segment = 'High Impact'
+ORDER BY customer_id;
+```
+
+**Question:** Which assets need immediate review?
+
+```sql
+SELECT asset_id, asset_type, active_high_severity_incidents,
+	   latest_inspection_result
+FROM routing_asset_attention_scorecard
+WHERE attention_band = 'Immediate Review'
+ORDER BY asset_id;
+```
+
+**Question:** Which completed repairs were late?
+
+```sql
+SELECT work_order_id, incident_id, repair_duration_hours
+FROM routing_repair_performance_mart
+WHERE performance_band = 'Completed Late'
+ORDER BY work_order_id;
+```
+
+Validation checks:
+
+| Example | Expected validation result |
+|---|---|
+| High Impact customers | 10 ordered rows, from `CUS0004` through `CUS0040`; all rows have `service_impact_segment = 'High Impact'` in the source table. |
+| Immediate Review assets | 14 ordered rows, from `AST0002` through `AST0030`; every row uses `attention_band = 'Immediate Review'`. |
+| Completed Late repairs | 15 ordered rows, from `WO0003` through `WO0051`; every row uses `performance_band = 'Completed Late'`. |
+
+#### Step 5 Save And Test Sequence
+
+1. Verify only the three `routing_*` tables are selected.
+2. Save the source description, data-source instructions, table descriptions, and all three validated examples.
+3. Save the agent-level instructions and wait for the Data Agent configuration update to complete.
+4. Start a new conversation. Do not reuse the Step 4 conversation because earlier base-table tool choices can affect routing.
+5. Ask the three routing questions once in the agent UI. Confirm the source, table, exact filter literal, complete row count, and ascending order.
+6. Fix configuration errors before running the SDK snapshot. Do not repeatedly prompt the same conversation until it happens to answer correctly.
+7. Run `SNAPSHOT_NAME="step5_routing"` and inspect `source_trace` and `generated_query` in addition to the SDK answer judgement.
+8. Run `SNAPSHOT_NAME="step5_final"` separately for the 16 standard challenge prompts. Confirm standard KPIs still use `WaterUtilitiesSemanticModel`.
+
+The three exact routing questions are intentionally stored as validated examples because Step 5 demonstrates deterministic multi-source routing rather than held-out generalization. This configuration should make the expected route highly reliable, but Data Agent generation is nondeterministic; no instruction set can promise 100% on every run.
+
+#### Step 5 Routing Checkpoint
 
 | Test | Expected source | Expected object |
 |---|---|---|
@@ -260,6 +365,12 @@ Prefer WaterUtilitiesSemanticModel for standard governed metrics. Use WaterUtili
 | Which customers are in the high impact segment? | `WaterUtilitiesDemo` | `routing_customer_service_impact` |
 | Which assets need immediate review? | `WaterUtilitiesDemo` | `routing_asset_attention_scorecard` |
 | Which completed repairs were late? | `WaterUtilitiesDemo` | `routing_repair_performance_mart` |
+
+For each routing question, require all three conditions:
+
+- Answer pass: every expected ID is present once, with no extra IDs.
+- Routing pass: the trace or thread identifies `WaterUtilitiesDemo` and the expected mart.
+- SQL pass: the query uses the exact classification value and orders by the correct identifier without row limiting.
 
 ## Complete Answer Key
 

@@ -141,8 +141,18 @@ class WaterUtilitiesPackageTests(unittest.TestCase):
         self.assertTrue(all(row.get("sdk_expected_answer") for row in routing["evaluation_queries"]))
         self.assertEqual(calculated, {row["id"]: row["ground_truth_answer"] for row in routing["evaluation_queries"]})
         config = json.loads((ROOT / "agent-configuration" / "routing" / "water-utilities" / "data-agent-configuration.json").read_text(encoding="utf-8"))["dataAgentConfiguration"]
-        selected = config["dataSources"][1]["selectedTables"]
+        lakehouse_source = config["dataSources"][1]
+        selected = lakehouse_source["selectedTables"]
         self.assertEqual(selected, [row["expected_object"] for row in routing["evaluation_queries"]])
+        for evaluation_row, example in zip(routing["evaluation_queries"], lakehouse_source["exampleQueries"], strict=True):
+            ground_truth_sql = evaluation_row["ground_truth_sql"]
+            example_sql = example["query"]
+            self.assertIn(f"FROM {evaluation_row['expected_object']}", example_sql)
+            self.assertIn(ground_truth_sql.split(" WHERE ", 1)[1], example_sql)
+        for phrase in ("exact stored values", "ascending order", "without TOP, LIMIT"):
+            self.assertIn(phrase, lakehouse_source["instructions"])
+        for classification in ("service_impact_segment = 'High Impact'", "attention_band = 'Immediate Review'", "performance_band = 'Completed Late'"):
+            self.assertIn(classification, config["agentInstructions"])
 
     def test_lakehouse_tuning_dataset_is_held_out_and_complete(self):
         dataset = json.loads(LAKEHOUSE_TUNING.read_text(encoding="utf-8"))
@@ -175,6 +185,16 @@ class WaterUtilitiesPackageTests(unittest.TestCase):
             "#### Selected-Table Descriptions",
             "#### Validated SQL Example Queries",
             "#### Step 4 Checkpoint",
+        ):
+            self.assertIn(required, facilitator_guide)
+        for required in (
+            "#### Step 5 Data Agent Instructions",
+            "#### Step 5 Lakehouse Source Description",
+            "#### Step 5 Lakehouse Data-Source Instructions",
+            "#### Step 5 Table Descriptions",
+            "#### Step 5 Validated SQL Examples",
+            "#### Step 5 Save And Test Sequence",
+            "#### Step 5 Routing Checkpoint",
         ):
             self.assertIn(required, facilitator_guide)
         for table in ("base_customers", "base_assets", "base_incidents", "base_work_orders", "base_inspections"):
