@@ -71,6 +71,12 @@ class DeploymentNotebookTests(unittest.TestCase):
         self.assertIn("wait_for_lakehouse_table_sync", self.source)
         self.assertIn("lakehouses/{lakehouse_id}/tables", self.source)
 
+    def test_csv_temporal_values_use_iso_source_formats(self):
+        self.assertIn('source_format = "yyyy-MM-dd" if data_type == "date" else "yyyy-MM-dd HH:mm:ss"', self.source)
+        self.assertIn("Could not parse {data_type} value", self.source)
+        self.assertNotIn('F.to_date(F.col(name), "dd/MM/yyyy")', self.source)
+        self.assertNotIn('F.to_timestamp(F.col(name), "dd/MM/yyyy HH:mm:ss")', self.source)
+
     def test_no_binary_model_dependency(self):
         lowered = self.source.lower()
         self.assertNotIn(".pbip", lowered)

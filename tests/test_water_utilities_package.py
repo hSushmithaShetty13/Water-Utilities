@@ -73,6 +73,22 @@ class WaterUtilitiesPackageTests(unittest.TestCase):
         self.assertTrue(all(row["incident_id"] in incident_ids for row in work_orders))
         self.assertTrue(all(row["asset_id"] in asset_ids for row in inspections))
 
+    def test_profile_temporal_source_values_use_iso_formats(self):
+        profile = json.loads((ROOT / "config" / "domains" / "water-utilities.json").read_text(encoding="utf-8"))
+        source_formats = {"date": "%Y-%m-%d", "dateTime": "%Y-%m-%d %H:%M:%S"}
+        checked_values = 0
+        for table in profile["tables"]:
+            rows = read_csv(ROOT / table["sourcePath"])
+            for column in table["columns"]:
+                if column["type"] not in source_formats:
+                    continue
+                for row in rows:
+                    value = row[column["source"]]
+                    if value:
+                        datetime.strptime(value, source_formats[column["type"]])
+                        checked_values += 1
+        self.assertGreater(checked_values, 0)
+
     def test_generators_are_deterministic(self):
         tracked = list(BASE.glob("*.csv")) + list(ROUTING.glob("*.csv"))
         before = {path: sha256(path) for path in tracked}

@@ -497,6 +497,24 @@ For each saved visual, use **Add to Q&A**, enable **Verified answer**, and add b
 6. Verify that standard questions use `WaterUtilitiesSemanticModel`; correct numbers produced by routing-mart SQL are still routing failures.
 7. Rerun `SNAPSHOT_NAME="step5_final"`. The notebook uses the latest evaluation ID, so rerunning replaces the displayed Step 5 final comparison without deleting earlier Delta rows.
 
+##### Blank Temporal Measures After Deployment
+
+If `[Completed Work Orders]` returns 28 but `[Average Repair Duration]`, `[Completed On Time Work Orders]`, or `[Work Completed On Time]` displays blank, stop tuning instructions. This combination indicates a data-typing problem rather than measure selection.
+
+The repository CSV files store dates as `yyyy-MM-dd` and timestamps as `yyyy-MM-dd HH:mm:ss`. An earlier deployment notebook parsed them as `dd/MM/yyyy` and `dd/MM/yyyy HH:mm:ss`, which silently wrote null temporal values into the Delta tables. The corrected deployment notebook uses the ISO source formats and raises an error instead of accepting an unparseable non-empty value.
+
+Repair an existing workspace as follows:
+
+1. Update or reimport the latest `NB_Deploy_Data_Agent_Hackathon.ipynb` from the repository.
+2. Keep `DOMAIN_PROFILE="water-utilities"`, set `OVERWRITE_TABLES=True`, and retain the same target workspace and artifact names.
+3. Run the setup cells, then rerun notebook section **3. Load profile data into managed Delta tables**. This overwrites the affected tables with correctly typed `date` and `timestamp` columns.
+4. Run section **8. Refresh and verify deployment** so `WaterUtilitiesSemanticModel` sees the replaced Delta schema and values. If the existing imported notebook requires earlier variables, run the notebook from the start with semantic-model deployment enabled; the update is idempotent for the named artifacts.
+5. In the Lakehouse, verify `base_work_orders` has non-null values for `work_started_at`, `promised_completion_at`, and completed rows of `work_completed_at`.
+6. Refresh the report page. The cards should show 36.07 hours for `[Average Repair Duration]`, 13 for `[Completed On Time Work Orders]`, 28 for `[Completed Work Orders]`, and 46.43% for `[Work Completed On Time]`.
+7. Refresh or reopen the semantic model and Data Agent, start a new conversation, and retest the six failed prompts before rerunning `step5_final`.
+
+Do not replace blanks with zero in DAX. That would hide the failed timestamp ingestion and produce misleading results.
+
 If a hard filtered question still fails after these controls, add a dedicated governed measure rather than instructing the agent to reconstruct business logic. For WU008, the optional measure is:
 
 ```dax
